@@ -1,0 +1,41 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: 60px;
+}
+
+/* .controls-wrapper {
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+} */
+
+.grid {
+  align-items: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: 1000px;
+  width: 1000px;
+}
+
+.grid div {
+  border: 1px solid lightgrey;
+  /* flex-grow: 1; */
+  height: 4.8%;
+  width: 4.8%;
+}
+
+.userCraft {
+  background-color: rgb(154, 154, 255);
+}
+
+.enemyCraft {
+  background-color: rgb(255, 145, 145);
+}
