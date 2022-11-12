@@ -9,11 +9,11 @@ h1 {
   font-size: 60px;
 }
 
-/* .controls-wrapper {
+.controls-wrapper {
   display: flex;
   justify-content:space-between;
   align-items: center;
-} */
+}
 
 .grid {
   align-items: center;
@@ -21,15 +21,16 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  height: 1000px;
-  width: 1000px;
+  height: 600px;
+  width: 700px;
 }
 
 .grid div {
+  font-size: 10px;
   border: 1px solid lightgrey;
   /* flex-grow: 1; */
-  height: 4.8%;
-  width: 4.8%;
+  height: 4.95%;
+  width: 4.26%;
 }
 
 .userCraft {
@@ -38,4 +39,16 @@ h1 {
 
 .enemyCraft {
   background-color: rgb(255, 145, 145);
+}
+
+.shield {
+  background-color: purple;
+}
+
+.projectile {
+  background-color: rgb(255, 149, 0);
+}
+
+.enemy-projectile {
+  background-color: rgb(255, 0, 0);
 }
