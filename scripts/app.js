@@ -21,8 +21,8 @@ function init() {
     310, 311, 314, 315, 318, 319, 322, 323, 326, 327, 332, 333, 336, 337, 340,
     341, 344, 345, 348, 349,
   ];
-  let enemiesDestroyed = [];
-  let shieldsDestroyed = [];
+  const enemiesDestroyed = [];
+  const shieldsDestroyed = [];
   let score = 0;
 
   function createGrid() {
@@ -37,10 +37,8 @@ function init() {
 
   function addEnemyCraft() {
     for (let i = 0; i < enemyCraftIndex.length; i++) {
-      if (!enemiesDestroyed.includes[i]) {
+      if (!enemiesDestroyed.includes(i)) {
         cells[enemyCraftIndex[i]].classList.add("enemyCraft");
-      } else {
-        cells[enemyCraftIndex[i]].classList.remove("enemyCraft");
       }
     }
   }
@@ -118,6 +116,11 @@ function init() {
       results.innerHTML = "GAME OVER";
       endGame();
     }
+    if (enemyCraftIndex.length === enemiesDestroyed.length) {
+      results.innerHTML =
+        "CONGRATULATIONS YOU WIN<br>PROGRESS TO THE NEXT LEVEL";
+      endGame();
+    }
   }
 
   function userShoot(event) {
@@ -146,13 +149,16 @@ function init() {
         let shieldDestroyed = shieldIndex.indexOf(userProjectileIndex);
         shieldsDestroyed.push(shieldDestroyed);
       }
+      if (cells[userProjectileIndex].classList.contains("enemy-projectile")) {
+        cells[userProjectileIndex].classList.remove("projectile");
+        clearInterval(userProjectile);
+      }
     }
     switch (event.key) {
       case "z":
         return (userProjectile = setInterval(moveProjectile, 100));
     }
   }
-
   function enemyShoot() {
     let enemyProjectileIndex = enemyCraftIndex[Math.floor(Math.random() * 18)];
     function moveEnemyProjectile() {
@@ -166,6 +172,10 @@ function init() {
         let shieldDestroyed = shieldIndex.indexOf(enemyProjectileIndex);
         shieldsDestroyed.push(shieldDestroyed);
       }
+      if (cells[enemyProjectileIndex].classList.contains("projectile")) {
+        cells[enemyProjectileIndex].classList.remove("enemy-projectile");
+        clearInterval(enemyProjectile);
+      }
       if (enemyProjectileIndex > 395) {
         cells[enemyProjectileIndex].classList.remove("enemy-projectile");
       }
@@ -176,14 +186,15 @@ function init() {
         if (livesRemaining === 0) {
           cells[userCraftIndex].classList.remove("userCraft");
           results.innerHTML = "GAME OVER";
-          endGame();
           gameIsRunning = false;
+          endGame();
         }
       }
     }
-    let enemyProjectile = setInterval(moveEnemyProjectile, 50);
+    let enemyProjectile = setInterval(moveEnemyProjectile, 80);
     // console.log(enemyProjectileIndex);
   }
+
 
   function startGame() {
     gameIsRunning = true;
