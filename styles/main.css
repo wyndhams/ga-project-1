@@ -27,7 +27,7 @@ h1 {
 
 .grid div {
   font-size: 10px;
-  border: 1px solid lightgrey;
+  border: 1px solid rgb(152, 152, 152);
   /* flex-grow: 1; */
   height: 4.95%;
   width: 4.26%;
@@ -51,4 +51,8 @@ h1 {
 
 .enemy-projectile {
   background-color: rgb(255, 0, 0);
+}
+
+.explosion {
+  background-color: rgb(225, 0, 255);
 }
