@@ -23,8 +23,6 @@ function init() {
   ];
   let enemiesDestroyed = [];
   let shieldsDestroyed = [];
-  let userProjectile;
-  let enemyProjectile;
   let score = 0;
 
   function createGrid() {
@@ -148,15 +146,6 @@ function init() {
         let shieldDestroyed = shieldIndex.indexOf(userProjectileIndex);
         shieldsDestroyed.push(shieldDestroyed);
       }
-      if (cells[userProjectileIndex].classList.contains("enemy-projectile")) {
-        cells[userProjectileIndex].classList.remove("enemy-projectile");
-        cells[userProjectileIndex].classList.remove("projectile");
-        // cells[userProjectileIndex].classList.add("explosion");
-        score += 50;
-        currentScore.innerHTML = score;
-        clearInterval(enemyProjectile);
-        clearInterval(userProjectile);
-      }
     }
     switch (event.key) {
       case "z":
@@ -192,7 +181,7 @@ function init() {
         }
       }
     }
-    return (enemyProjectile = setInterval(moveEnemyProjectile, 500));
+    let enemyProjectile = setInterval(moveEnemyProjectile, 50);
     // console.log(enemyProjectileIndex);
   }
 
