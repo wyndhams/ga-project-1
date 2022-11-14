@@ -17,7 +17,8 @@ h1 {
 
 .grid {
   align-items: center;
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+  background-color: black;
+  box-shadow: 0 0 20px 0 rgba(183, 183, 183, 0.2);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -27,7 +28,7 @@ h1 {
 
 .grid div {
   font-size: 10px;
-  border: 1px solid rgb(152, 152, 152);
+  border: 1px solid rgb(0, 0, 0);
   /* flex-grow: 1; */
   height: 4.95%;
   width: 4.26%;

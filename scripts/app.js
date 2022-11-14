@@ -1,7 +1,7 @@
 function init() {
   const grid = document.querySelector(".grid");
   const playPause = document.querySelector("#play-pause");
-  const stop = document.querySelector("#stop");
+  const stop = document.querySelector(".stop");
   const results = document.querySelector(".results");
   const currentScore = document.querySelector("#current-score");
   const lives = document.querySelector("#lives");
@@ -23,8 +23,9 @@ function init() {
   ];
   const enemiesDestroyed = [];
   const shieldsDestroyed = [];
-  let userProjectiles = [];
   let score = 0;
+  // used to minimise the amount a user can shoot
+  let projectileLimitingDistance = width * 2;
 
   function createGrid() {
     for (let i = 0; i < gridCellCount; i++) {
@@ -39,7 +40,7 @@ function init() {
   function addEnemyCraft() {
     for (let i = 0; i < enemyCraftIndex.length; i++) {
       if (!enemiesDestroyed.includes(i)) {
-        cells[enemyCraftIndex[i]].classList.add("enemyCraft");
+        cells[i].classList.add("enemyCraft");
       }
     }
   }
@@ -124,53 +125,59 @@ function init() {
     }
   }
 
-  function userShoot(event) {
-    // let userProjectileIndex = userCraftIndex;
-    function moveProjectile() {
-      userProjectiles.push(userCraftIndex - width);
-      userProjectiles.forEach((userProjectileIndex) => {
-        cells[userProjectileIndex].classList.remove("projectile");
-        cells[userProjectileIndex].classList.add("projectile");
-        userProjectiles = userProjectiles.map((i) => (i -= width));
-        // if (userProjectileIndex > 0) {
-        //   cells[userProjectileIndex].classList.remove("projectile");
-        //   userProjectileIndex -= width;
-        //   if (userProjectileIndex > 0) {
-        //     cells[userProjectileIndex].classList.add("projectile");
-        //     if (cells[userProjectileIndex].classList.contains("enemyCraft")) {
-        //       cells[userProjectileIndex].classList.remove("enemyCraft");
-        //       cells[userProjectileIndex].classList.remove("projectile");
-        //       // cells[userProjectileIndex].classList.add("explosion");
-        //       clearInterval(userProjectile);
-        //       const enemyDestroyed =
-        //         enemyCraftIndex.indexOf(userProjectileIndex);
-        //       enemiesDestroyed.push(enemyDestroyed);
-        //       score += 100;
-        //       currentScore.innerHTML = score;
-        //       // console.log(enemiesDestroyed);
-        //     }
-        //     if (cells[userProjectileIndex].classList.contains("shield")) {
-        //       cells[userProjectileIndex].classList.remove("projectile");
-        //       cells[userProjectileIndex].classList.remove("shield");
-        //       clearInterval(userProjectile);
-        //       let shieldDestroyed = shieldIndex.indexOf(userProjectileIndex);
-        //       shieldsDestroyed.push(shieldDestroyed);
-        //     }
-        //     if (
-        //       cells[userProjectileIndex].classList.contains("enemy-projectile")
-        //     ) {
-        //       cells[userProjectileIndex].classList.remove("projectile");
-        //       clearInterval(userProjectile);
-        //     }
-        //   }
-        // }
-      });
-    }
+  let userProjectiles = [];
+
+  function handleKeyDown(event) {
     switch (event.key) {
       case "z":
-        return (userProjectile = setInterval(moveProjectile, 100));
+        fireUserProjectile();
     }
   }
+
+  function fireUserProjectile() {
+    userProjectiles.push(userCraftIndex);
+  }
+
+  let userProjectileInterval = setInterval(() => {
+    // remove all projectile classes
+    userProjectiles.forEach((userProjectileIndex) => {
+      cells[userProjectileIndex].classList.remove("projectile");
+    });
+
+    // get new array of valid projectile positions
+    userProjectiles = userProjectiles
+      .map((userProjectileIndex) => (userProjectileIndex -= width))
+      .filter((userProjectileIndex) => userProjectileIndex >= 0);
+
+    console.log(userProjectiles);
+    userProjectiles.forEach((userProjectileIndex) => {
+      // if a projectile hits an enemy
+      if (cells[userProjectileIndex].classList.contains("enemyCraft")) {
+        cells[userProjectileIndex].classList.remove("enemyCraft");
+        enemiesDestroyed.push(userProjectileIndex);
+        userProjectiles = userProjectiles.filter(
+          (i) => i !== userProjectileIndex
+        );
+        cells[userProjectileIndex].classList.remove("projectile");
+      } else if (
+        cells[userProjectileIndex].classList.contains("enemy-projectile")
+      ) {
+        cells[userProjectileIndex].classList.remove("enemy-projectile");
+        userProjectiles = userProjectiles.filter(
+          (i) => i !== userProjectileIndex
+        );
+        cells[userProjectileIndex].classList.remove("projectile");
+      } else if (cells[userProjectileIndex].classList.contains("shield")) {
+        cells[userProjectileIndex].classList.remove("shield");
+        userProjectiles = userProjectiles.filter(
+          (i) => i !== userProjectileIndex
+        );
+        cells[userProjectileIndex].classList.remove("projectile");
+      } else {
+        cells[userProjectileIndex].classList.add("projectile");
+      }
+    });
+  }, 100);
 
   function enemyShoot() {
     let enemyProjectileIndex = enemyCraftIndex[Math.floor(Math.random() * 18)];
@@ -208,10 +215,10 @@ function init() {
         }
       }
     }
+
     let enemyProjectile = setInterval(moveEnemyProjectile, 80);
     // console.log(enemyProjectileIndex);
   }
-
 
   function startGame() {
     gameIsRunning = true;
@@ -223,6 +230,7 @@ function init() {
   function endGame() {
     clearInterval(enemyMoveStart);
     clearInterval(enemyShootStart);
+    clearInterval(userProjectileInterval);
     return (gameIsRunning = false);
   }
 
@@ -232,7 +240,7 @@ function init() {
   addShield();
 
   window.addEventListener("keydown", moveUserCraft);
-  window.addEventListener("keydown", userShoot);
+  window.addEventListener("keydown", handleKeyDown);
   playPause.addEventListener("click", startGame);
   stop.addEventListener("click", endGame);
 }
