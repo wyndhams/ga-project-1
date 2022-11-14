@@ -11,5 +11,5 @@ if (cells[userProjectileIndex].classList.contains("enemy-projectile")) {
 }
 
 if (cells[enemyProjectileIndex].classList.contains("enemyCraft"))
-
-if (cells[enemyProjectileIndex] !== cells[enemiesDestroyed])
+  if (cells[enemyProjectileIndex] !== cells[enemiesDestroyed]) {
+  }

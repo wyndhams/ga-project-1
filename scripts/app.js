@@ -23,6 +23,7 @@ function init() {
   ];
   const enemiesDestroyed = [];
   const shieldsDestroyed = [];
+  let userProjectiles = [];
   let score = 0;
 
   function createGrid() {
@@ -124,70 +125,86 @@ function init() {
   }
 
   function userShoot(event) {
-    let userProjectileIndex = userCraftIndex;
+    // let userProjectileIndex = userCraftIndex;
     function moveProjectile() {
-      cells[userProjectileIndex].classList.remove("projectile");
-      userProjectileIndex -= width;
-      cells[userProjectileIndex].classList.add("projectile");
-
-      if (cells[userProjectileIndex].classList.contains("enemyCraft")) {
-        cells[userProjectileIndex].classList.remove("enemyCraft");
+      userProjectiles.push(userCraftIndex - width);
+      userProjectiles.forEach((userProjectileIndex) => {
         cells[userProjectileIndex].classList.remove("projectile");
-        // cells[userProjectileIndex].classList.add("explosion");
-        clearInterval(userProjectile);
-        const enemyDestroyed = enemyCraftIndex.indexOf(userProjectileIndex);
-        enemiesDestroyed.push(enemyDestroyed);
-        score += 100;
-        currentScore.innerHTML = score;
-
-        // console.log(enemiesDestroyed);
-      }
-      if (cells[userProjectileIndex].classList.contains("shield")) {
-        cells[userProjectileIndex].classList.remove("projectile");
-        cells[userProjectileIndex].classList.remove("shield");
-        clearInterval(userProjectile);
-        let shieldDestroyed = shieldIndex.indexOf(userProjectileIndex);
-        shieldsDestroyed.push(shieldDestroyed);
-      }
-      if (cells[userProjectileIndex].classList.contains("enemy-projectile")) {
-        cells[userProjectileIndex].classList.remove("projectile");
-        clearInterval(userProjectile);
-      }
+        cells[userProjectileIndex].classList.add("projectile");
+        userProjectiles = userProjectiles.map((i) => (i -= width));
+        // if (userProjectileIndex > 0) {
+        //   cells[userProjectileIndex].classList.remove("projectile");
+        //   userProjectileIndex -= width;
+        //   if (userProjectileIndex > 0) {
+        //     cells[userProjectileIndex].classList.add("projectile");
+        //     if (cells[userProjectileIndex].classList.contains("enemyCraft")) {
+        //       cells[userProjectileIndex].classList.remove("enemyCraft");
+        //       cells[userProjectileIndex].classList.remove("projectile");
+        //       // cells[userProjectileIndex].classList.add("explosion");
+        //       clearInterval(userProjectile);
+        //       const enemyDestroyed =
+        //         enemyCraftIndex.indexOf(userProjectileIndex);
+        //       enemiesDestroyed.push(enemyDestroyed);
+        //       score += 100;
+        //       currentScore.innerHTML = score;
+        //       // console.log(enemiesDestroyed);
+        //     }
+        //     if (cells[userProjectileIndex].classList.contains("shield")) {
+        //       cells[userProjectileIndex].classList.remove("projectile");
+        //       cells[userProjectileIndex].classList.remove("shield");
+        //       clearInterval(userProjectile);
+        //       let shieldDestroyed = shieldIndex.indexOf(userProjectileIndex);
+        //       shieldsDestroyed.push(shieldDestroyed);
+        //     }
+        //     if (
+        //       cells[userProjectileIndex].classList.contains("enemy-projectile")
+        //     ) {
+        //       cells[userProjectileIndex].classList.remove("projectile");
+        //       clearInterval(userProjectile);
+        //     }
+        //   }
+        // }
+      });
     }
     switch (event.key) {
       case "z":
         return (userProjectile = setInterval(moveProjectile, 100));
     }
   }
+
   function enemyShoot() {
     let enemyProjectileIndex = enemyCraftIndex[Math.floor(Math.random() * 18)];
     function moveEnemyProjectile() {
-      cells[enemyProjectileIndex].classList.remove("enemy-projectile");
-      enemyProjectileIndex += width;
-      cells[enemyProjectileIndex].classList.add("enemy-projectile");
-      if (cells[enemyProjectileIndex].classList.contains("shield")) {
+      if (enemyProjectileIndex < cells.length - 1) {
         cells[enemyProjectileIndex].classList.remove("enemy-projectile");
-        cells[enemyProjectileIndex].classList.remove("shield");
-        clearInterval(enemyProjectile);
-        let shieldDestroyed = shieldIndex.indexOf(enemyProjectileIndex);
-        shieldsDestroyed.push(shieldDestroyed);
-      }
-      if (cells[enemyProjectileIndex].classList.contains("projectile")) {
-        cells[enemyProjectileIndex].classList.remove("enemy-projectile");
-        clearInterval(enemyProjectile);
-      }
-      if (enemyProjectileIndex > 395) {
-        cells[enemyProjectileIndex].classList.remove("enemy-projectile");
-      }
-      if (cells[enemyProjectileIndex].classList.contains("userCraft")) {
-        livesRemaining -= 1;
-        lives.innerHTML = livesRemaining;
-        clearInterval(enemyProjectile);
-        if (livesRemaining === 0) {
-          cells[userCraftIndex].classList.remove("userCraft");
-          results.innerHTML = "GAME OVER";
-          gameIsRunning = false;
-          endGame();
+        enemyProjectileIndex += width;
+        if (enemyProjectileIndex < cells.length - 1) {
+          cells[enemyProjectileIndex].classList.add("enemy-projectile");
+          if (cells[enemyProjectileIndex].classList.contains("shield")) {
+            cells[enemyProjectileIndex].classList.remove("enemy-projectile");
+            cells[enemyProjectileIndex].classList.remove("shield");
+            clearInterval(enemyProjectile);
+            let shieldDestroyed = shieldIndex.indexOf(enemyProjectileIndex);
+            shieldsDestroyed.push(shieldDestroyed);
+          }
+          if (cells[enemyProjectileIndex].classList.contains("projectile")) {
+            cells[enemyProjectileIndex].classList.remove("enemy-projectile");
+            clearInterval(enemyProjectile);
+          }
+          if (enemyProjectileIndex > 395) {
+            cells[enemyProjectileIndex].classList.remove("enemy-projectile");
+          }
+          if (cells[enemyProjectileIndex].classList.contains("userCraft")) {
+            livesRemaining -= 1;
+            lives.innerHTML = livesRemaining;
+            clearInterval(enemyProjectile);
+            if (livesRemaining === 0) {
+              cells[userCraftIndex].classList.remove("userCraft");
+              results.innerHTML = "GAME OVER";
+              gameIsRunning = false;
+              endGame();
+            }
+          }
         }
       }
     }
