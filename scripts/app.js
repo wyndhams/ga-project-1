@@ -17,8 +17,8 @@ function init() {
   const cells = [];
   let userCraftIndex = 385;
   let enemyCraftIndex = [
-    0, 1, 2, 3, 4, 5, 22, 23, 24, 25, 26, 27, 44, 45, 46, 47, 48, 49, 66, 67,
-    68, 69, 70, 71,
+    0, 1, 2, 3, 4, 5, 6, 22, 23, 24, 25, 26, 27, 28, 44, 45, 46, 47, 48, 49, 50,
+    66, 67, 68, 69, 70, 71, 72, 88, 89, 90, 91, 92, 93, 94,
   ];
   let shieldIndex = [
     310, 311, 314, 315, 318, 319, 322, 323, 326, 327, 332, 333, 336, 337, 340,
@@ -159,17 +159,15 @@ function init() {
       } else if (
         cells[userProjectileIndex].classList.contains("enemy-projectile")
       ) {
-        console.log("hit a projectile");
-        cells[userProjectileIndex].classList.remove(
-          "enemy-projectile",
-          "projectile"
-        );
+        cells[userProjectileIndex].classList.remove("projectile");
         userProjectiles = userProjectiles.filter(
           (i) => i !== userProjectileIndex
         );
-        clearInterval(enemyProjectile);
-        cells[enemyProjectileIndex].classList.remove("enemy-projectile");
-        cells[userProjectileIndex].classList.remove("projectile");
+        // clearInterval(enemyProjectileInterval);
+        cells[userProjectileIndex].classList.remove(
+          "projectile",
+          "enemy-projectile"
+        );
       } else if (cells[userProjectileIndex].classList.contains("shield")) {
         cells[userProjectileIndex].classList.remove("shield");
         userProjectiles = userProjectiles.filter(
@@ -182,60 +180,73 @@ function init() {
     });
   }, 100);
 
-  let enemyProjectileIndex = [];
-  // let enemyProjectileInterval;
+  let enemyProjectiles = [];
 
-  function enemyShoot() {
-    enemyProjectileIndex = enemyCraftIndex[Math.floor(Math.random() * 24)];
-    function moveEnemyProjectile() {
-      if (enemyProjectileIndex < cells.length - 1) {
-        cells[enemyProjectileIndex].classList.remove("enemy-projectile");
-        enemyProjectileIndex += width;
-        if (enemyProjectileIndex < cells.length - 1) {
-          cells[enemyProjectileIndex].classList.add("enemy-projectile");
-          if (cells[enemyProjectileIndex].classList.contains("shield")) {
-            cells[enemyProjectileIndex].classList.remove("enemy-projectile");
-            cells[enemyProjectileIndex].classList.remove("shield");
-            clearInterval(enemyProjectile);
-            let shieldDestroyed = shieldIndex.indexOf(enemyProjectileIndex);
-            shieldsDestroyed.push(shieldDestroyed);
-          }
-          if (cells[enemyProjectileIndex].classList.contains("projectile")) {
-            cells[enemyProjectileIndex].classList.remove("enemy-projectile");
-            clearInterval(enemyProjectile);
-          }
-          if (enemyProjectileIndex > 395) {
-            cells[enemyProjectileIndex].classList.remove("enemy-projectile");
-          }
-          if (cells[enemyProjectileIndex].classList.contains("userCraft")) {
-            livesRemaining -= 1;
-            lives.innerHTML = livesRemaining;
-            clearInterval(enemyProjectile);
-            if (livesRemaining === 0) {
-              cells[userCraftIndex].classList.remove("userCraft");
-              results.innerHTML = "GAME OVER";
-              gameIsRunning = false;
-              endGame();
-            }
-          }
-        }
-      }
-    }
-    enemyProjectile = setInterval(moveEnemyProjectile, 80);
+  function fireEnemyProjectile() {
+    enemyProjectiles.push(
+      enemyCraftIndex[Math.floor(Math.random() * enemyCraftIndex.length)]
+    );
   }
+  let enemyProjectileInterval = setInterval(() => {
+    // remove all projectile classes
+    enemyProjectiles.forEach((enemyProjectileIndex) => {
+      cells[enemyProjectileIndex].classList.remove("enemy-projectile");
+    });
+
+    // get new array of valid projectile positions
+    enemyProjectiles = enemyProjectiles
+      .map((enemyProjectileIndex) => (enemyProjectileIndex += width))
+      .filter((enemyProjectileIndex) => enemyProjectileIndex <= 395);
+
+    enemyProjectiles.forEach((enemyProjectileIndex) => {
+      // if a projectile hits an enemy
+      if (cells[enemyProjectileIndex].classList.contains("userCraft")) {
+        cells[enemyProjectileIndex].classList.remove("enemy-projectile");
+        livesRemaining -= 1;
+        lives.innerHTML = livesRemaining;
+        if (livesRemaining === 0) {
+          cells[userCraftIndex].classList.remove("userCraft");
+          results.innerHTML = "GAME OVER";
+          gameIsRunning = false;
+          endGame();
+        }
+      } else if (cells[enemyProjectileIndex].classList.contains("projectile")) {
+        cells[enemyProjectileIndex].classList.remove("enemy-projectile");
+        enemyProjectiles = enemyProjectiles.filter(
+          (i) => i !== enemyProjectileIndex
+        );
+        cells[enemyProjectileIndex].classList.remove(
+          "enemy-projectile",
+          "projectile"
+        );
+        // cells[enemyProjectileIndex].classList.add("explosion");
+
+        // clearInterval(userProjectileInterval);
+        // handleKeyDown();
+      } else if (cells[enemyProjectileIndex].classList.contains("shield")) {
+        cells[enemyProjectileIndex].classList.remove("shield");
+        enemyProjectiles = enemyProjectiles.filter(
+          (i) => i !== enemyProjectileIndex
+        );
+        cells[enemyProjectileIndex].classList.remove("enemy-projectile");
+      } else {
+        cells[enemyProjectileIndex].classList.add("enemy-projectile");
+      }
+    });
+  }, 100);
 
   let enemyMoveStart;
-  let enemyShootStart;
+  let enemyShotInterval;
   function startGame() {
     gameIsRunning = true;
-    enemyShoot();
+    fireEnemyProjectile();
     enemyMoveStart = setInterval(moveEnemyCraft, 500);
-    enemyShootStart = setInterval(enemyShoot, 2000);
+    enemyShotInterval = setInterval(fireEnemyProjectile, 2000);
   }
 
   function endGame() {
     clearInterval(enemyMoveStart);
-    clearInterval(enemyShootStart);
+    clearInterval(enemyProjectileInterval);
     clearInterval(userProjectileInterval);
     return (gameIsRunning = false);
   }
