@@ -5,6 +5,7 @@ function init() {
   const results = document.querySelector(".results");
   const currentScore = document.querySelector("#current-score");
   const lives = document.querySelector("#lives");
+  const level = document.querySelector("#level");
   let enemyProjectile;
 
   let gameIsRunning = false;
@@ -23,11 +24,11 @@ function init() {
     310, 311, 314, 315, 318, 319, 322, 323, 326, 327, 332, 333, 336, 337, 340,
     341, 344, 345, 348, 349,
   ];
-  const enemiesDestroyed = [];
   const shieldsDestroyed = [];
   let score = 0;
+  let currentLevel = 1;
   // used to minimise the amount a user can shoot
-  let projectileLimitingDistance = width * 2;
+  let fireRate;
 
   function createGrid() {
     for (let i = 0; i < gridCellCount; i++) {
@@ -80,28 +81,23 @@ function init() {
   }
 
   function moveEnemyCraft() {
-    const leftSide = enemyCraftIndex[0] % width === 0;
-    const rightSide =
-      enemyCraftIndex[enemyCraftIndex.length - 1] % width === width - 1;
-    const landing = enemyCraftIndex[enemyCraftIndex.length - 6] === 374;
+    const leftSide = enemyCraftIndex.some((e) => e % width === 0);
+    const rightSide = enemyCraftIndex.some((e) => e % width === width - 1);
+    const landing = enemyCraftIndex.some((e) => e === 374);
     removeEnemyCraft();
-    if (rightSide === true && movingRight === true && landing === false) {
+    if (rightSide && movingRight && !landing) {
       for (let i = 0; i < enemyCraftIndex.length; i++) {
         enemyCraftIndex[i] += width + 1;
         movement = -1;
         movingRight = false;
       }
-    } else if (
-      leftSide === true &&
-      movingRight === false &&
-      landing === false
-    ) {
+    } else if (leftSide && !movingRight && !landing) {
       for (let i = 0; i < enemyCraftIndex.length; i++) {
         enemyCraftIndex[i] += width - 1;
         movement = 1;
         movingRight = true;
       }
-    } else if (landing === true) {
+    } else if (landing) {
       for (let i = 0; i < enemyCraftIndex.length; i++) {
         enemyCraftIndex[i];
         movement = 0;
@@ -111,12 +107,13 @@ function init() {
       enemyCraftIndex[i] += movement;
     }
     addEnemyCraft();
-    if (landing === true || enemyCraftIndex.some((i) => i >= 396)) {
+    if (landing || enemyCraftIndex.some((e) => e.contains("userCraft"))) {
       results.innerHTML = "GAME OVER";
       endGame();
     }
-    console.log(enemyCraftIndex);
     if (!enemyCraftIndex.length) {
+      currentLevel++;
+      level.innerHTML = currentLevel;
       results.innerHTML =
         "CONGRATULATIONS YOU WIN<br>PROGRESS TO THE NEXT LEVEL";
       endGame();
@@ -157,6 +154,8 @@ function init() {
           (i) => i !== userProjectileIndex
         );
         cells[userProjectileIndex].classList.remove("projectile");
+        score += 100;
+        currentScore.innerHTML = score;
       } else if (
         cells[userProjectileIndex].classList.contains("enemy-projectile")
       ) {
@@ -184,8 +183,10 @@ function init() {
   }, 100);
 
   let enemyProjectileIndex = [];
+  // let enemyProjectileInterval;
+
   function enemyShoot() {
-    enemyProjectileIndex = enemyCraftIndex[Math.floor(Math.random() * 18)];
+    enemyProjectileIndex = enemyCraftIndex[Math.floor(Math.random() * 24)];
     function moveEnemyProjectile() {
       if (enemyProjectileIndex < cells.length - 1) {
         cells[enemyProjectileIndex].classList.remove("enemy-projectile");
@@ -220,7 +221,6 @@ function init() {
         }
       }
     }
-
     enemyProjectile = setInterval(moveEnemyProjectile, 80);
   }
 
