@@ -1,8 +1,9 @@
 body {
-  background-image: url("../images/space-background.jpg");
+  font-family: "Audiowide", cursive;
+  background-image: url("../images/record_shelf.jpeg");
   background-size: cover;
   font-size: 30px;
-  color: aliceblue;
+  color: rgb(0, 0, 0);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -10,47 +11,63 @@ body {
 }
 
 h1 {
+  font-family: "Rubik Glitch", cursive;
   font-size: 60px;
-  margin: 20px;
-}
-
-.controls-wrapper {
-  display: flex;
-  justify-content:space-between;
-  align-items: center;
+  margin: 20px 0px 31px 0px;
+  background: linear-gradient(to right, #dfffe0, #d0f0ff);
+  /* background-color: rgb(218, 238, 255); */
+  padding: 10px 20px;
+  border: 3px solid black;
+  border-radius: 10px;
 }
 
 .display-elements {
   font-size: 16px;
   display: flex;
-    justify-content:space-between;
+  justify-content: space-between;
   align-items: center;
-  background: linear-gradient(to right, #67b26b, #4ca2cb);
-
+  background: linear-gradient(to right, #dfffe0, #d0f0ff);
+  padding: 0px 10px;
+  margin-bottom: 23px;
+  border: 2px solid black;
+  border-radius: 5px;
+  width: 785px;
+  height: 22px;
 }
 
-.main-wrapper {
+.border-wrapper {
   /* display: flex; */
+  border: 3px solid black;
+  border-radius: 8px;
+
+  margin: 0;
+}
+
+.box {
+  max-width: 100%;
+  margin: 0;
 }
 
 .grid-wrapper {
-  border: 20px solid black;
-  border-radius: 20px;
   margin-bottom: 0;
-
+  border-style: solid;
+  border-width: 40px;
+  border-image: url("../images/border7.jpg") 60 30;
 }
 
 .grid {
+  border: 3px solid black;
+  border-radius: 5px;
   align-items: center;
   background-image: url("../images/battlefield2.jpg");
-  background-size:cover ;
+  background-size: cover;
   /* background-color: rgb(255, 255, 255); */
   /* box-shadow: 0 0 20px 0 rgba(183, 183, 183, 0.2); */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  height: 600px;
-  width: 700px;
+  height: 580px;
+  width: 720px;
 }
 
 .grid div {
@@ -61,11 +78,19 @@ h1 {
   width: 4.4%;
 }
 
+.controls-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
 button {
+  font-family: "Audiowide", cursive;
   border-radius: 4px;
-  background: linear-gradient(to right, #67b26b, #4ca2cb);
-  border: 2px solid rgb(255, 255, 255);
-  color: #FFFFFF;
+  background: linear-gradient(to right, #dfffe0, #d0f0ff);
+  background-size: cover;
+  border: 2px solid rgb(0, 0, 0);
+  color: #000000;
   text-align: center;
   font-size: 14px;
   padding: 10px;
@@ -76,17 +101,24 @@ button {
 }
 
 button:active {
-    transform: scale(102%) translateY(2px);
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5)
+  transform: scale(102%) translateY(2px);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+button:hover {
+  transform: translateY(-2px)
+}
+
+button:active {
+  transform: scale(102%) translateY(2px);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .userCraft {
-  background-color: rgb(154, 154, 255);
+  /* background-color: rgb(154, 154, 255); */
   border: 1px solid black;
-  /* background-image: url("../images/turntable.jpg");
-  background-size: cover; */
-  /* height: 15px;
-  width: 15px; */
+  background-image: url("../images/turntable.jpg");
+  background-size: cover;
 }
 
 .enemyCraft {
@@ -116,19 +148,16 @@ button:active {
 
   /* background-image: url("../images/vinyl.jpg");
   background-size: contain; */
-
 }
 
 .enemy-projectile {
   background-color: rgb(255, 0, 0);
   /* background-image: url("../images/spr_missile.png");
   background-size: contain; */
-
 }
 
 .explosion {
   /* background-color: rgb(225, 0, 255); */
   background-image: url("../images/explosion2.png");
   background-size: contain;
-
 }
