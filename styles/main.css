@@ -1,4 +1,8 @@
 body {
+  background-image: url("../images/space-background.jpg");
+  background-size: cover;
+  font-size: 30px;
+  color: aliceblue;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -7,6 +11,7 @@ body {
 
 h1 {
   font-size: 60px;
+  margin: 20px;
 }
 
 .controls-wrapper {
@@ -15,10 +20,32 @@ h1 {
   align-items: center;
 }
 
+.display-elements {
+  font-size: 16px;
+  display: flex;
+    justify-content:space-between;
+  align-items: center;
+  background: linear-gradient(to right, #67b26b, #4ca2cb);
+
+}
+
+.main-wrapper {
+  /* display: flex; */
+}
+
+.grid-wrapper {
+  border: 20px solid black;
+  border-radius: 20px;
+  margin-bottom: 0;
+
+}
+
 .grid {
   align-items: center;
-  background-color: rgb(255, 255, 255);
-  box-shadow: 0 0 20px 0 rgba(183, 183, 183, 0.2);
+  background-image: url("../images/battlefield2.jpg");
+  background-size:cover ;
+  /* background-color: rgb(255, 255, 255); */
+  /* box-shadow: 0 0 20px 0 rgba(183, 183, 183, 0.2); */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -28,32 +55,80 @@ h1 {
 
 .grid div {
   font-size: 10px;
-  border: 1px solid rgb(0, 0, 0);
+  /* border: 1px solid rgb(0, 0, 0); */
   /* flex-grow: 1; */
-  height: 4.95%;
-  width: 4.26%;
+  height: 5.15%;
+  width: 4.4%;
+}
+
+button {
+  border-radius: 4px;
+  background: linear-gradient(to right, #67b26b, #4ca2cb);
+  border: 2px solid rgb(255, 255, 255);
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 14px;
+  padding: 10px;
+  width: 100px;
+  transition: all 0.05s linear;
+  cursor: pointer;
+  margin: 10px;
+}
+
+button:active {
+    transform: scale(102%) translateY(2px);
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5)
 }
 
 .userCraft {
   background-color: rgb(154, 154, 255);
+  border: 1px solid black;
+  /* background-image: url("../images/turntable.jpg");
+  background-size: cover; */
+  /* height: 15px;
+  width: 15px; */
 }
 
 .enemyCraft {
   background-color: rgb(255, 145, 145);
+  /* border: 1px solid black; */
+  /* background-image: url("../images/alien_ship.jpg");
+  background-size: contain; */
+}
+
+.specialEnemyCraft {
+  background-color: aqua;
+  border: 1px solid black;
+  border-radius: 50px;
 }
 
 .shield {
   background-color: purple;
+  /* border: 1px solid black; */
+
+  /* background-image: url("../images/speakers.jpeg");
+  background-size: contain; */
 }
 
 .projectile {
   background-color: rgb(255, 149, 0);
+  /* border: 1px solid black; */
+
+  /* background-image: url("../images/vinyl.jpg");
+  background-size: contain; */
+
 }
 
 .enemy-projectile {
   background-color: rgb(255, 0, 0);
+  /* background-image: url("../images/spr_missile.png");
+  background-size: contain; */
+
 }
 
 .explosion {
-  background-color: rgb(225, 0, 255);
+  /* background-color: rgb(225, 0, 255); */
+  background-image: url("../images/explosion2.png");
+  background-size: contain;
+
 }

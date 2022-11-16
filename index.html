@@ -10,20 +10,25 @@
 </head>
 <body>
   <h1>Bass Invaders</h1>
-  <div class="controls-wrapper">
-    <button id="play-pause">Play/Pause</button>
-    <button class="stop">Stop</button>
-    <button id="restart">Restart</button>
-  </div>
-  <div class="grid-wrapper">
-    <div class="grid"></div>
-  </div>
-  <p class="results"> </p>
-  <div>
+  <div class="display-elements">
     <p>Current Score: <span id="current-score">0</span></p>
     <p>Lives Remaining: <span id="lives">3</span></p>
     <p>Level: <span id="level">1</span></p>
     <p>Number of Credits: 1</p>
+  </div>
+  <div class="main-wrapper">
+    <div class="grid-wrapper">
+      <div class="grid"></div>
+    </div>
+    <p class="restart-message"> </p>
+    <p class="results"> </p>
+    <p class="countdown"> </p>
+    <p class="leaderboard"> </p>
+  </div>
+  <div class="controls-wrapper">
+    <button id="play">Play</button>
+    <!-- <button class="stop">Stop</button> -->
+    <button id="restart">Restart</button>
   </div>
 </body>
 </html>

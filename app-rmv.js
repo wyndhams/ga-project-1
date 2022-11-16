@@ -260,3 +260,68 @@ if (cells[enemyProjectileIndex].classList.contains("enemyCraft"))
       } else {
         cells[userProjectileIndex].classList.add("projectile");
       }
+
+      
+
+
+      let userProjectiles = [];
+
+  function handleKeyDown(event) {
+    switch (event.key) {
+      case "z":
+        fireUserProjectile();
+    }
+  }
+
+  function fireUserProjectile() {
+    userProjectiles.push(userCraftIndex);
+  }
+
+  let userProjectileInterval = setInterval(() => {
+    // remove all projectile classes
+    userProjectiles.forEach((userProjectileIndex) => {
+      cells[userProjectileIndex].classList.remove("projectile");
+    });
+
+    // get new array of valid projectile positions
+    userProjectiles = userProjectiles
+      .map((userProjectileIndex) => (userProjectileIndex -= width))
+      .filter((userProjectileIndex) => userProjectileIndex >= 0);
+
+    userProjectiles.forEach((userProjectileIndex) => {
+      // if a projectile hits an enemy
+      if (cells[userProjectileIndex].classList.contains("enemyCraft")) {
+        cells[userProjectileIndex].classList.remove("enemyCraft");
+        const positionInArray = enemyCraftIndex.indexOf(userProjectileIndex);
+        enemyCraftIndex.splice(positionInArray, 1);
+        userProjectiles = userProjectiles.filter(
+          (i) => i !== userProjectileIndex
+        );
+        cells[userProjectileIndex].classList.remove("projectile");
+        score += 100;
+        currentScore.innerHTML = score;
+      } else if (
+        cells[userProjectileIndex].classList.contains("enemy-projectile")
+      ) {
+        console.log("hit a projectile");
+        cells[userProjectileIndex].classList.remove(
+          "enemy-projectile",
+          "projectile"
+        );
+        userProjectiles = userProjectiles.filter(
+          (i) => i !== userProjectileIndex
+        );
+        clearInterval(enemyProjectile);
+        cells[enemyProjectileIndex].classList.remove("enemy-projectile");
+        cells[userProjectileIndex].classList.remove("projectile");
+      } else if (cells[userProjectileIndex].classList.contains("shield")) {
+        cells[userProjectileIndex].classList.remove("shield");
+        userProjectiles = userProjectiles.filter(
+          (i) => i !== userProjectileIndex
+        );
+        cells[userProjectileIndex].classList.remove("projectile");
+      } else {
+        cells[userProjectileIndex].classList.add("projectile");
+      }
+    });
+  }, 100);
