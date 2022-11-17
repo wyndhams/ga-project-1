@@ -42,36 +42,48 @@
           </h6>
           <h5>Instructions:</h5>
           <ul>
-            <li>Press "Space" to shoot</li>
+            <li>Press "z" to shoot</li>
             <li>Move left and right using the arrow keys</li>
             <li>You gain a life for every enemy wave you survive</li>
-            <li>Don't let the invader touch down on Earth!</li>
+            <li>Don't let the invaders touch down on Earth!</li>
             <li>Don't get shot!</li>
           </ul>
+        </div>
+        <div id="level-up-wrapper">
+          <div class="level-up-overlay" id="hidden-level-up">
+            <p class="restart-message">LEVEL <span class="current-level"> </span><br>Get ready to Play...<br>The invaders are picking up pace!</p>
+            <p class="countdown"></p>
+          </div>
+        </div>
+        <div id="game-over-wrapper">
+          <div class="game-over-overlay" id="hidden-game-over">
+            <p class="game-over"></p>
+            <p class="results">
+              Congratulations bass junky<br>that was a wild ride... <br><br>BUT<br><br>They always get
+              you in the end!
+            </p>
+          </div>
         </div>
       </div>
       <div class="grid"></div>
     </div>
-    
     <div class="display-elements">
       <h3>Current Score: <span id="current-score">0</span></h3>
       <h3>Lives Remaining: <span id="lives">3</span></h3>
       <h3>Level: <span id="level">1</span></h3>
-      <!-- <p>Number of Credits: 1</p> -->
     </div>
-    <div class="hidden-level-up" id="level-up">
-      <p class="restart-message">We go again! Get ready to Play!</p>
-      <p class="countdown"></p>
-    </div>
-    <div class="hidden-game-over" id="game-over">
-      <p class="game-over"></p>
-      <p class="results">
-        Congratulations bass junky, that was a wild ride... but they always get
-        you in the end! Your final score was:
-      </p>
-    </div>
-    <div class="hidden-leaderboard" id="leaderboard">
-      <p>LEADERBOARD"></p>
-    </div>
+    <div class="player"></div>
+    <audio id="load-sound" src=""></audio>
+    <audio id="pads" src=""></audio>
+    <audio id="user-shoot" src=""></audio>
+    <audio id="enemy-shoot" src=""></audio>
+    <audio id="start-sound" src=""></audio>
+    <audio id="restart-sound" src=""></audio>
+    <audio id="level-up-sound" src=""></audio>
+    <audio id="game-over-sound" src=""></audio>
+    <audio id="boom" src=""></audio>
+    <!-- <div class="hidden-leaderboard" id="leaderboard">
+      <p>LEADERBOARD</p>
+    </div> -->
   </body>
 </html>

@@ -8,8 +8,23 @@ function init() {
   const currentScore = document.querySelector("#current-score");
   const lives = document.querySelector("#lives");
   const level = document.querySelector("#level");
+  const currentLevelElement = document.querySelector(".current-level");
   const countdownElement = document.querySelector(".countdown");
   const hiddenIntro = document.querySelector("#hidden-intro");
+  const hiddenLevelUp = document.querySelector("#hidden-level-up");
+  const hiddenGameOver = document.querySelector("#hidden-game-over");
+  const orbOne = document.querySelector(".orb1");
+  const orbTwo = document.querySelector(".orb2");
+  const toggleMute = document.querySelector("#toggle-mute");
+  const loadSound = document.querySelector("#load-sound");
+  const pads = document.querySelector("#pads");
+  const userShootSound = document.querySelector("#user-shoot");
+  const enemyShootSound = document.querySelector("#enemy-shoot");
+  const startSound = document.querySelector("#start-sound");
+  const restartSound = document.querySelector("#restart-sound");
+  const levelUpSound = document.querySelector("#level-up-sound");
+  const gameOverSound = document.querySelector("#game-over-sound");
+  const boomSound = document.querySelector("#boom");
   countdownElement.innerHTML = " ";
   let enemyProjectile;
   let gameIsRunning = false;
@@ -23,6 +38,18 @@ function init() {
   let score = 0;
   let currentLevel = 1;
   let enemyCraftIndex = [];
+  let mute = false;
+
+  function backgroundMusic() {
+    if (!mute) {
+      loadSound.src = "../audio/intro-F#.wav";
+      loadSound.play();
+    } else if (mute) {
+      loadSound.pause();
+    }
+  }
+
+  backgroundMusic();
 
   function enemySpawnArrangementCheck() {
     if (currentLevel === 1 || currentLevel === 5) {
@@ -54,6 +81,10 @@ function init() {
 
   let specialEnemyCraftIndex = [22];
   let shieldIndex = [
+    310, 311, 314, 315, 318, 319, 322, 323, 326, 327, 332, 333, 336, 337, 340,
+    341, 344, 345, 348, 349,
+  ];
+  let shieldRespawn = [
     310, 311, 314, 315, 318, 319, 322, 323, 326, 327, 332, 333, 336, 337, 340,
     341, 344, 345, 348, 349,
   ];
@@ -156,7 +187,6 @@ function init() {
     addEnemyCraft();
     // || enemyCraftIndex.some((e) => e.contains("userCraft")))
     if (landing) {
-      results.innerHTML = "GAME OVER";
       endGame();
     }
     if (!enemyCraftIndex.length) {
@@ -280,6 +310,8 @@ function init() {
     enemyProjectiles.push(
       enemyCraftIndex[Math.floor(Math.random() * enemyCraftIndex.length)]
     );
+    orbOne.style.animation = "shake 2s infinite";
+    orbTwo.style.animation = "shake 2s infinite";
   }
   let enemyProjectileInterval = setInterval(() => {
     // remove all projectile classes
@@ -305,7 +337,6 @@ function init() {
         );
         if (livesRemaining === 0) {
           cells[userCraftIndex].classList.remove("userCraft");
-          results.innerHTML = "GAME OVER";
           gameIsRunning = false;
           endGame();
         }
@@ -333,6 +364,12 @@ function init() {
   let specialCraftDelay = 40000;
 
   function startGame() {
+    if (!mute) {
+      startSound.src = "../audio/start.wav";
+      startSound.play();
+    } else if (mute) {
+      startSound.pause();
+    }
     gameIsRunning = true;
     fireEnemyProjectile();
     hiddenIntro.style.display = "none";
@@ -352,12 +389,13 @@ function init() {
     level.innerHTML = currentLevel;
     livesRemaining++;
     lives.innerHTML = livesRemaining;
-    results.innerHTML = "CONGRATULATIONS YOU WIN<br>PROGRESS TO THE NEXT LEVEL";
     clearInterval(enemyMoveStart);
     clearInterval(enemyShotInterval);
     clearInterval(specialEnemyCraftMovementInterval);
     removeEnemyCraft();
     removeSpecialEnemyCraft();
+    hiddenLevelUp.style.display = "block";
+    currentLevelElement.innerHTML = currentLevel;
     let countDown = 3;
     const newCountdown = setInterval(() => {
       if (countDown <= 0) {
@@ -384,12 +422,68 @@ function init() {
           moveSpecialEnemyCraft,
           400
         );
-        results.innerHTML = " ";
+        countdownElement.innerHTML = " ";
+        hiddenLevelUp.style.display = "none";
       }
       countdownElement.innerHTML = countDown;
       countDown -= 1;
     }, 1000);
   }
+
+  function endGame() {
+    clearInterval(enemyMoveStart);
+    clearInterval(enemyProjectileInterval);
+    clearInterval(userProjectileInterval);
+    clearInterval(specialEnemyCraftMovementInterval);
+    hiddenGameOver.style.display = "block";
+    return (gameIsRunning = false);
+    // leaderboard();
+  }
+
+  function restartGame() {
+    clearInterval(enemyMoveStart);
+    clearInterval(enemyShotInterval);
+    clearInterval(specialEnemyCraftMovementInterval);
+    removeEnemyCraft();
+    removeSpecialEnemyCraft();
+    let countDown = 3;
+    const newCountdown = setInterval(() => {
+      if (countDown <= 0) {
+        clearInterval(newCountdown);
+        enemySpawnArrangementCheck();
+        addEnemyCraft();
+        fireEnemyProjectile();
+        specialEnemyCraftIndex = [22];
+        movement = 1;
+        movingRight = true;
+        enemyMoveStart = setInterval(moveEnemyCraft, enemySpeed);
+        enemyShotInterval = setInterval(
+          fireEnemyProjectile,
+          enemyShotFrequency
+        );
+        specialEnemyCraftTimeout = setTimeout(
+          addSpecialEnemyCraft,
+          specialCraftDelay
+        );
+        specialEnemyCraftMovementInterval = setInterval(
+          moveSpecialEnemyCraft,
+          400
+        );
+        results.innerHTML = " ";
+        countdownElement.innerHTML = countDown;
+        countDown -= 1;
+        movement = 1;
+        movingRight = true;
+        currentLevel = 1;
+        livesRemaining = 3;
+        score = 0;
+      }
+    }, 3000);
+  }
+
+  addEnemyCraft();
+  addUserCraft();
+  addShield();
 
   // const highScores = [];
 
@@ -410,63 +504,10 @@ function init() {
 
   // function leaderboard() {
   //   setTimeout(() => {
-  //     alert(`Wowweee, what a ride, congratulations on your final score: ${score}`)
+  //     alert(`Woweee, what a ride, congratulations on your final score: ${score}`)
   //     storeHighScores();
-  //     const
   //   })
   // }
-
-  function endGame() {
-    clearInterval(enemyMoveStart);
-    clearInterval(enemyProjectileInterval);
-    clearInterval(userProjectileInterval);
-    clearInterval(specialEnemyCraftMovementInterval);
-    return (gameIsRunning = false);
-    leaderboard();
-  }
-
-  function restartGame() {
-    clearInterval(enemyMoveStart);
-    clearInterval(enemyShotInterval);
-    clearInterval(specialEnemyCraftMovementInterval);
-    removeEnemyCraft();
-    removeSpecialEnemyCraft();
-    let countDown = 3;
-    const newCountdown = setInterval(() => {
-      if (countDown <= 0) {
-        clearInterval(newCountdown);
-        countdownElement.innerHTML = "";
-      }
-      countdownElement.innerHTML = countDown;
-      countDown -= 1;
-    }, 1000);
-    setTimeout(() => {
-      enemySpawnArrangementCheck();
-      addEnemyCraft();
-      specialEnemyCraftIndex.forEach((spawn) => enemyCraftIndex.push(spawn));
-      enemyMoveStart = setInterval(moveEnemyCraft, enemySpeed);
-      enemyShotInterval = setInterval(fireEnemyProjectile, enemyShotFrequency);
-      specialEnemyCraftTimeout = setTimeout(
-        addSpecialEnemyCraft,
-        specialCraftDelay
-      );
-      specialEnemyCraftMovementInterval = setInterval(
-        moveSpecialEnemyCraft,
-        400
-      );
-      movement = 1;
-      movingRight = true;
-      currentLevel = 1;
-
-      livesRemaining = 3;
-
-      currentScore = 0;
-    }, 3800);
-  }
-
-  addEnemyCraft();
-  addUserCraft();
-  addShield();
 
   window.addEventListener("keydown", moveUserCraft);
   window.addEventListener("keydown", handleKeyDown);
