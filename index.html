@@ -16,6 +16,10 @@
       href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
     <title>Document</title>
   </head>
   <body>
@@ -28,23 +32,46 @@
       <button id="restart">Restart</button>
       <button id="toggle-mute">Mute</button>
     </div>
-    <div class="mac"></div>
-    <div class="border-wrapper">
-      <div class="box grid-wrapper">
-        <div class="grid"></div>
+    <div class="box grid-wrapper">
+      <div class="hidden-intro" id="introduction-wrapper">
+        <div class="introduction-overlay">
+          <h5>You are our only hope!</h5>
+          <h6>
+            Help defend Earth against the noisy Bass Invaders... <br />pssst if
+            you want to shut them up there is a mute button!
+          </h6>
+          <h5>Instructions:</h5>
+          <ul>
+            <li>Press "Space" to shoot</li>
+            <li>Move left and right using the arrow keys</li>
+            <li>You gain a life for every enemy wave you survive</li>
+            <li>Don't let the invader touch down on Earth!</li>
+            <li>Don't get shot!</li>
+          </ul>
+        </div>
       </div>
+      <div class="grid"></div>
     </div>
+    
     <div class="display-elements">
       <h3>Current Score: <span id="current-score">0</span></h3>
       <h3>Lives Remaining: <span id="lives">3</span></h3>
       <h3>Level: <span id="level">1</span></h3>
       <!-- <p>Number of Credits: 1</p> -->
     </div>
-    <div>
-      <p class="restart-message"></p>
-      <p class="results"></p>
+    <div class="hidden-level-up" id="level-up">
+      <p class="restart-message">We go again! Get ready to Play!</p>
       <p class="countdown"></p>
     </div>
-    <p class="leaderboard"></p>
+    <div class="hidden-game-over" id="game-over">
+      <p class="game-over">GAME OVER</p>
+      <p class="results">
+        Congratulations bass junky, that was a wild ride... but they always get
+        you in the end! Your final score was:
+      </p>
+    </div>
+    <div class="hidden-leaderboard" id="leaderboard">
+      <p>LEADERBOARD"></p>
+    </div>
   </body>
 </html>
