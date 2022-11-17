@@ -58,10 +58,6 @@ function init() {
     341, 344, 345, 348, 349,
   ];
 
-  let enemyShotFrequency = 2000;
-  // used to minimise the amount a user can shoot
-  let fireRate;
-
   function createGrid() {
     for (let i = 0; i < gridCellCount; i++) {
       const cell = document.createElement("div");
@@ -170,13 +166,18 @@ function init() {
   }
 
   let userProjectiles = [];
+  // used to minimise the amount a user can shoot
+  let userFireRate;
 
   function handleKeyDown(event) {
     switch (event.key) {
       case "z":
         fireUserProjectile();
+        controlUserFire();
     }
   }
+
+  function controlUserFire() {}
 
   function fireUserProjectile() {
     userProjectiles.push(userCraftIndex);
@@ -214,10 +215,9 @@ function init() {
         cells[userProjectileIndex].classList.contains("specialEnemyCraft")
       ) {
         cells[userProjectileIndex].classList.remove("specialEnemyCraft");
-        // const specialPositionInArray =
-        //   specialEnemyCraftIndex.indexOf(userProjectileIndex);
-        // specialEnemyCraftIndex.splice(specialPositionInArray, 0);
-        // clearInterval(specialEnemyCraftMovementInterval);
+        clearInterval(specialEnemyCraftMovementInterval);
+        // clearInterval(specialEnemyCraftTimeout);
+        removeSpecialEnemyCraft();
         userProjectiles = userProjectiles.filter(
           (i) => i !== userProjectileIndex
         );
@@ -236,11 +236,13 @@ function init() {
         userProjectiles = userProjectiles.filter(
           (i) => i !== userProjectileIndex
         );
-        // clearInterval(enemyProjectileInterval);
         cells[userProjectileIndex].classList.remove(
           "projectile",
           "enemy-projectile"
         );
+        clearInterval(enemyProjectileInterval);
+        fireEnemyProjectile();
+        // setInterval(enemyProjectileInterval, 200);
         cells[userProjectileIndex].classList.add("explosion");
         setTimeout(
           () => cells[userProjectileIndex].classList.remove("explosion"),
@@ -263,9 +265,22 @@ function init() {
     });
   }, 100);
 
+  // function collisionChecker() {
+  //   userProjectiles.forEach((userProjectileIndex) => {
+  //     cells[userProjectileIndex].classList.remove("projectile");
+  //   });
+  //   setInterval(() => {
+  //     if (cells[userProjectileIndex].classList.contains("enemy-projectile")) {
+  //       cells[userProjectileIndex].classList.remove("projectile");
+  //       cells[userProjectileIndex].classList.remove("enemy-projectile");
+  //     }
+  //   }, 5);
+  // }
+
   let enemyProjectiles = [];
   let enemySpeed = 1000;
   let enemyProjectileSpeed = 100;
+  let enemyShotFrequency = 2000;
   // function enemySpeedCheck() {
   //   if (enemyCraftIndex.some((e) => e > 66)) {
   //     enemySpeed = 150;
@@ -346,16 +361,16 @@ function init() {
   let specialEnemyCraftTimeout;
   let specialEnemyCraft2Timeout;
   let specialEnemyCraftMovementInterval;
-  let specialCraftDelay = 10000;
+  let specialCraftDelay = 40000;
 
   function startGame() {
     gameIsRunning = true;
     fireEnemyProjectile();
+    // collisionChecker();
     specialEnemyCraftTimeout = setTimeout(
       addSpecialEnemyCraft,
       specialCraftDelay
     );
-    // specialEnemyCraft2Timeout = setTimeout(addSpecialEnemyCraft, 40000);
     specialEnemyCraftMovementInterval = setInterval(moveSpecialEnemyCraft, 400);
     enemyMoveStart = setInterval(moveEnemyCraft, enemySpeed);
     enemyShotInterval = setInterval(fireEnemyProjectile, enemyShotFrequency);

@@ -1,39 +1,50 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="./scripts/app.js"></script>
-  <link rel="stylesheet" href="./styles/main.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
-  <title>Document</title>
-</head>
-<body>
-  <h1>BASS INVADERS</h1>
-  <div class="display-elements">
-    <p>Current Score: <span id="current-score">0</span></p>
-    <p>Lives Remaining: <span id="lives">3</span></p>
-    <p>Level: <span id="level">1</span></p>
-    <p>Number of Credits: 1</p>
-  </div>
-  <div class="border-wrapper">
-    <div class="box grid-wrapper">
-      <div class="grid"></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./scripts/app.js"></script>
+    <link rel="stylesheet" href="./styles/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap"
+      rel="stylesheet"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>BASS INVADERS</h1>
+    <div class="orb1"></div>
+    <div class="orb2"></div>
+    <div class="controls-wrapper">
+      <button id="play">Play</button>
+      <!-- <button class="stop">Stop</button> -->
+      <button id="restart">Restart</button>
+      <button id="toggle-mute">Mute</button>
     </div>
-  </div>
-  <div class="controls-wrapper">
-    <button id="play">Play</button>
-    <!-- <button class="stop">Stop</button> -->
-    <button id="restart">Restart</button>
-    <button id="toggle-mute">Mute</button>
-  </div>
-  <p class="restart-message"> </p>
-  <p class="results"> </p>
-  <p class="countdown"> </p>
-  <p class="leaderboard"> </p>
-</body>
+    <div class="mac"></div>
+    <div class="border-wrapper">
+      <div class="box grid-wrapper">
+        <div class="grid"></div>
+      </div>
+    </div>
+    <div class="display-elements">
+      <h3>Current Score: <span id="current-score">0</span></h3>
+      <h3>Lives Remaining: <span id="lives">3</span></h3>
+      <h3>Level: <span id="level">1</span></h3>
+      <!-- <p>Number of Credits: 1</p> -->
+    </div>
+    <div>
+      <p class="restart-message"></p>
+      <p class="results"></p>
+      <p class="countdown"></p>
+    </div>
+    <p class="leaderboard"></p>
+  </body>
 </html>
