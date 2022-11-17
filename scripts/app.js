@@ -9,6 +9,7 @@ function init() {
   const lives = document.querySelector("#lives");
   const level = document.querySelector("#level");
   const countdownElement = document.querySelector(".countdown");
+  const hiddenIntro = document.querySelector("#hidden-intro");
   countdownElement.innerHTML = " ";
   let enemyProjectile;
   let gameIsRunning = false;
@@ -21,7 +22,6 @@ function init() {
   let userCraftIndex = 385;
   let score = 0;
   let currentLevel = 1;
-  console.log(typeof currentLevel);
   let enemyCraftIndex = [];
 
   function enemySpawnArrangementCheck() {
@@ -335,6 +335,7 @@ function init() {
   function startGame() {
     gameIsRunning = true;
     fireEnemyProjectile();
+    hiddenIntro.style.display = "none";
     specialEnemyCraftTimeout = setTimeout(
       addSpecialEnemyCraft,
       specialCraftDelay
