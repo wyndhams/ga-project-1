@@ -45,7 +45,7 @@ function init() {
 
   window.onload = function () {
     if (!mute) {
-      pads.src = "../audio/intro-f-sharp.wav";
+      pads.src = "./audio/intro-f-sharp.wav";
       pads.play();
     }
   };
@@ -57,7 +57,7 @@ function init() {
         50, 66, 67, 68, 69, 70, 71, 72, 88, 89, 90, 91, 92, 93, 94,
       ];
       if (!mute && currentLevel === 5) {
-        pads.src = "../audio/pad-Dm.wav";
+        pads.src = "./audio/pad-Dm.wav";
         pads.play();
       } else if (mute) {
         pads.pause();
@@ -68,7 +68,7 @@ function init() {
         46, 47, 48, 49, 50, 51, 52, 69, 70, 71, 72, 73, 92, 93, 94, 115,
       ];
       if (!mute) {
-        pads.src = "../audio/pad-A.wav";
+        pads.src = "./audio/pad-A.wav";
         pads.play();
       } else if (mute) {
         pads.pause();
@@ -92,7 +92,7 @@ function init() {
         178, 184, 203, 223, 227, 246, 247, 248,
       ];
       if (!mute) {
-        pads.src = "../audio/pad-Gm.wav";
+        pads.src = "./audio/pad-Gm.wav";
         pads.play();
       } else if (mute) {
         pads.pause();
@@ -185,7 +185,7 @@ function init() {
 
   function moveEnemyCraft() {
     if (!mute) {
-      enemyMoveSound.src = "../audio/shoot-1.wav";
+      enemyMoveSound.src = "./audio/shoot-1.wav";
       enemyMoveSound.play();
     }
     const leftSide = enemyCraftIndex.some((e) => e % width === 0);
@@ -240,7 +240,7 @@ function init() {
   function fireUserProjectile() {
     userProjectiles.push(userCraftIndex);
     if (!mute) {
-      userShootSound.src = "../audio/shoot-2.wav";
+      userShootSound.src = "./audio/shoot-2.wav";
       userShootSound.play();
     } else if (mute) {
       userShootSound.pause();
@@ -260,7 +260,7 @@ function init() {
     orbOne.style.animation = `shake ${enemyShotFrequencySeconds}s infinite`;
     orbTwo.style.animation = `shake ${enemyShotFrequencySeconds}s infinite`;
     if (!mute) {
-      enemyShootSound.src = "../audio/enemy-shoot.wav";
+      enemyShootSound.src = "./audio/enemy-shoot.wav";
       enemyShootSound.play();
     } else if (mute) {
       enemyShootSound.pause();
@@ -269,7 +269,7 @@ function init() {
 
   function userHitPlaySound() {
     if (!mute) {
-      userHitSound.src = "../audio/user-hit.wav";
+      userHitSound.src = "./audio/user-hit.wav";
       userHitSound.play();
     } else if (mute) {
       userHitSound.pause();
@@ -306,7 +306,7 @@ function init() {
         }
       } else if (cells[enemyProjectileIndex].classList.contains("shield")) {
         if (!mute) {
-          boomSound.src = "../audio/shield-hit.wav";
+          boomSound.src = "./audio/shield-hit.wav";
           boomSound.play();
         } else if (mute) {
           boomSound.pause();
@@ -399,7 +399,7 @@ function init() {
         cells[userProjectileIndex].splice(enemyProjectiles);
       } else if (cells[userProjectileIndex].classList.contains("shield")) {
         if (!mute) {
-          boomSound.src = "../audio/shield-hit.wav";
+          boomSound.src = "./audio/shield-hit.wav";
           boomSound.play();
         } else if (mute) {
           boomSound.pause();
@@ -448,9 +448,9 @@ function init() {
 
   function startGame() {
     if (!mute) {
-      pads.src = "../audio/pad-Dm.wav";
+      pads.src = "./audio/pad-Dm.wav";
       pads.play();
-      startSound.src = "../audio/start.wav";
+      startSound.src = "./audio/start.wav";
       startSound.play();
     } else if (mute) {
       startSound.pause();
@@ -475,7 +475,7 @@ function init() {
 
   function levelUp() {
     if (!mute) {
-      levelUpSound.src = "../audio/level-up.wav";
+      levelUpSound.src = "./audio/level-up.wav";
       levelUpSound.play();
     } else if (mute) {
       levelUpSound.pause();
@@ -531,9 +531,9 @@ function init() {
 
   function endGame() {
     if (!mute) {
-      gameOverSound.src = "../audio/game-over.wav";
+      gameOverSound.src = "./audio/game-over.wav";
       gameOverSound.play();
-      boomSound.src = "../audio/boom.wav";
+      boomSound.src = "./audio/boom.wav";
     } else if (mute) {
       gameOverSound.pause();
       boomSound.pause();
