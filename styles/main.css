@@ -2,7 +2,7 @@ body {
   font-family: "Audiowide", cursive;
   background-image: url("../images/rave3.jpg");
   /* background-image: url("../images/mac.jpg"); */
-  background-size: contain;
+  background-size: cover;
   font-size: 30px;
   color: rgba(0, 0, 0, 0.8);
   display: flex;

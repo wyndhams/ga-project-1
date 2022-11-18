@@ -16,11 +16,10 @@ function init() {
   const orbOne = document.querySelector(".orb1");
   const orbTwo = document.querySelector(".orb2");
   const muteBtn = document.querySelector("#toggle-mute");
+  const userHitSound = document.querySelector("#user-hit");
   const pads = document.querySelector("#pads");
-  pads.loop = true;
   const userShootSound = document.querySelector("#user-shoot");
   const enemyShootSound = document.querySelector("#enemy-shoot");
-  const userHitSound = document.querySelector("#user-hit");
   const enemyMoveSound = document.querySelector("#enemy-move");
   const startSound = document.querySelector("#start-sound");
   const restartSound = document.querySelector("#restart-sound");
@@ -41,7 +40,6 @@ function init() {
   let currentLevel = 1;
   let enemyCraftIndex = [];
   let mute = false;
-  let travelDistance = 3;
 
   window.onload = function () {
     if (!mute) {
@@ -107,12 +105,10 @@ function init() {
     310, 311, 314, 315, 318, 319, 322, 323, 326, 327, 332, 333, 336, 337, 340,
     341, 344, 345, 348, 349,
   ];
-
-  function shieldRespawnCheck() {
-    if (currentLevel % 5 === 0) {
-      addShield();
-    }
-  }
+  let shieldRespawn = [
+    310, 311, 314, 315, 318, 319, 322, 323, 326, 327, 332, 333, 336, 337, 340,
+    341, 344, 345, 348, 349,
+  ];
 
   function createGrid() {
     for (let i = 0; i < gridCellCount; i++) {
@@ -251,14 +247,13 @@ function init() {
   let enemySpeed = 1000;
   let enemyProjectileSpeed = 100;
   let enemyShotFrequency = 2000;
-  let enemyShotFrequencySeconds = enemyShotFrequency / 1000;
 
   function fireEnemyProjectile() {
     enemyProjectiles.push(
       enemyCraftIndex[Math.floor(Math.random() * enemyCraftIndex.length)]
     );
-    orbOne.style.animation = `shake ${enemyShotFrequencySeconds}s infinite`;
-    orbTwo.style.animation = `shake ${enemyShotFrequencySeconds}s infinite`;
+    orbOne.style.animation = "shake 2s infinite";
+    orbTwo.style.animation = "shake 2s infinite";
     if (!mute) {
       enemyShootSound.src = "../audio/enemy-shoot.wav";
       enemyShootSound.play();
@@ -456,9 +451,6 @@ function init() {
       startSound.pause();
       pads.pause();
     }
-    addEnemyCraft();
-    addUserCraft();
-    addShield();
     gameIsRunning = true;
     fireEnemyProjectile();
     hiddenIntro.style.display = "none";
@@ -491,7 +483,6 @@ function init() {
     clearInterval(specialEnemyCraftMovementInterval);
     removeEnemyCraft();
     removeSpecialEnemyCraft();
-    shieldRespawnCheck();
     hiddenLevelUp.style.display = "block";
     currentLevelElement.innerHTML = currentLevel;
     let countDown = 3;
@@ -504,7 +495,6 @@ function init() {
         specialEnemyCraftIndex = [22];
         enemySpeed = enemySpeed - 80;
         enemyShotFrequency = enemyShotFrequency - 100;
-        enemyShotFrequencySeconds = enemyShotFrequency / 1000;
         // enemyProjectileSpeed = enemyProjectileSpeed - 2;
         movement = 1;
         movingRight = true;
@@ -547,52 +537,55 @@ function init() {
   }
 
   function restartGame() {
-    window.location.reload();
-    // if (!mute) {
-    //   restartSound.src = "../audio/restart.wav";
-    //   restartSound.play();
-    // } else if (mute) {
-    //   restartSound.pause();
-    // }
-    // clearInterval(enemyMoveStart);
-    // clearInterval(enemyShotInterval);
-    // clearInterval(specialEnemyCraftMovementInterval);
-    // removeEnemyCraft();
-    // removeSpecialEnemyCraft();
-    // let countDown = 3;
-    // const newCountdown = setInterval(() => {
-    //   if (countDown <= 0) {
-    //     clearInterval(newCountdown);
-    //     enemySpawnArrangementCheck();
-    //     addEnemyCraft();
-    //     fireEnemyProjectile();
-    //     specialEnemyCraftIndex = [22];
-    //     movement = 1;
-    //     movingRight = true;
-    //     enemyMoveStart = setInterval(moveEnemyCraft, enemySpeed);
-    //     enemyShotInterval = setInterval(
-    //       fireEnemyProjectile,
-    //       enemyShotFrequency
-    //     );
-    //     specialEnemyCraftTimeout = setTimeout(
-    //       addSpecialEnemyCraft,
-    //       specialCraftDelay
-    //     );
-    //     specialEnemyCraftMovementInterval = setInterval(
-    //       moveSpecialEnemyCraft,
-    //       400
-    //     );
-    //     results.innerHTML = " ";
-    //     countdownElement.innerHTML = countDown;
-    //     countDown -= 1;
-    //     movement = 1;
-    //     movingRight = true;
-    //     currentLevel = 1;
-    //     livesRemaining = 3;
-    //     score = 0;
-    //   }
-    // }, 3000);
+    if (!mute) {
+      restartSound.src = "../audio/restart.wav";
+      restartSound.play();
+    } else if (mute) {
+      restartSound.pause();
+    }
+    clearInterval(enemyMoveStart);
+    clearInterval(enemyShotInterval);
+    clearInterval(specialEnemyCraftMovementInterval);
+    removeEnemyCraft();
+    removeSpecialEnemyCraft();
+    let countDown = 3;
+    const newCountdown = setInterval(() => {
+      if (countDown <= 0) {
+        clearInterval(newCountdown);
+        enemySpawnArrangementCheck();
+        addEnemyCraft();
+        fireEnemyProjectile();
+        specialEnemyCraftIndex = [22];
+        movement = 1;
+        movingRight = true;
+        enemyMoveStart = setInterval(moveEnemyCraft, enemySpeed);
+        enemyShotInterval = setInterval(
+          fireEnemyProjectile,
+          enemyShotFrequency
+        );
+        specialEnemyCraftTimeout = setTimeout(
+          addSpecialEnemyCraft,
+          specialCraftDelay
+        );
+        specialEnemyCraftMovementInterval = setInterval(
+          moveSpecialEnemyCraft,
+          400
+        );
+        results.innerHTML = " ";
+        countdownElement.innerHTML = countDown;
+        countDown -= 1;
+        movement = 1;
+        movingRight = true;
+        currentLevel = 1;
+        livesRemaining = 3;
+        score = 0;
+      }
+    }, 3000);
   }
+
+  addEnemyCraft();
+  addUserCraft();
+  addShield();
 
   // const highScores = [];
 
