@@ -1,7 +1,7 @@
 function init() {
   const grid = document.querySelector(".grid");
   const playBtn = document.querySelector("#play");
-  const stopBtn = document.querySelector(".stop");
+  // const stopBtn = document.querySelector(".stop");
   const restartBtn = document.querySelector("#restart");
   const restartMessage = document.querySelector(".restart-message");
   const results = document.querySelector(".results");
@@ -16,9 +16,10 @@ function init() {
   const orbOne = document.querySelector(".orb1");
   const orbTwo = document.querySelector(".orb2");
   const muteBtn = document.querySelector("#toggle-mute");
-  const userHitSound = document.querySelector("#user-hit");
   const pads = document.querySelector("#pads");
+  pads.loop = true;
   const userShootSound = document.querySelector("#user-shoot");
+  const userHitSound = document.querySelector("#user-hit");
   const enemyShootSound = document.querySelector("#enemy-shoot");
   const enemyMoveSound = document.querySelector("#enemy-move");
   const startSound = document.querySelector("#start-sound");
@@ -40,6 +41,7 @@ function init() {
   let currentLevel = 1;
   let enemyCraftIndex = [];
   let mute = false;
+  let travelDistance = 3;
 
   window.onload = function () {
     if (!mute) {
@@ -366,17 +368,7 @@ function init() {
     }
   }
 
-  let enemyProjectileInterval = setInterval(() => {
-    // remove all projectile classes
-    enemyProjectiles.forEach((enemyProjectileIndex) => {
-      cells[enemyProjectileIndex].classList.remove("enemy-projectile");
-    });
-
-    // get new array of valid projectile positions
-    enemyProjectiles = enemyProjectiles
-      .map((enemyProjectileIndex) => (enemyProjectileIndex += width))
-      .filter((enemyProjectileIndex) => enemyProjectileIndex <= 395);
-
+  function checkForEnemyCollisions() {
     enemyProjectiles.forEach((enemyProjectileIndex) => {
       // if a projectile hits an enemy
       if (cells[enemyProjectileIndex].classList.contains("userCraft")) {
@@ -415,13 +407,25 @@ function init() {
         cells[enemyProjectileIndex].classList.add("enemy-projectile");
       }
     });
+  }
+
+  let enemyProjectileInterval = setInterval(() => {
+    // remove all projectile classes
+    enemyProjectiles.forEach((enemyProjectileIndex) => {
+      cells[enemyProjectileIndex].classList.remove("enemy-projectile");
+    });
+    // get new array of valid projectile positions
+    enemyProjectiles = enemyProjectiles
+      .map((enemyProjectileIndex) => (enemyProjectileIndex += width))
+      .filter((enemyProjectileIndex) => enemyProjectileIndex <= 395);
+    checkForEnemyCollisions();
   }, enemyProjectileSpeed);
 
   let enemyMoveStart;
   let enemyShotInterval;
   let specialEnemyCraftTimeout;
   let specialEnemyCraftMovementInterval;
-  let specialCraftDelay = 40000;
+  let specialCraftDelay = 60000;
 
   function toggleMute() {
     if (mute === false) {
@@ -463,6 +467,9 @@ function init() {
     specialEnemyCraftMovementInterval = setInterval(moveSpecialEnemyCraft, 400);
     enemyMoveStart = setInterval(moveEnemyCraft, enemySpeed);
     enemyShotInterval = setInterval(fireEnemyProjectile, enemyShotFrequency);
+    addEnemyCraft();
+    addUserCraft();
+    addShield();
   }
 
   // function pauseGame() {}
@@ -540,55 +547,52 @@ function init() {
   }
 
   function restartGame() {
-    if (!mute) {
-      restartSound.src = "../audio/restart.wav";
-      restartSound.play();
-    } else if (mute) {
-      restartSound.pause();
-    }
-    clearInterval(enemyMoveStart);
-    clearInterval(enemyShotInterval);
-    clearInterval(specialEnemyCraftMovementInterval);
-    removeEnemyCraft();
-    removeSpecialEnemyCraft();
-    let countDown = 3;
-    const newCountdown = setInterval(() => {
-      if (countDown <= 0) {
-        clearInterval(newCountdown);
-        enemySpawnArrangementCheck();
-        addEnemyCraft();
-        fireEnemyProjectile();
-        specialEnemyCraftIndex = [22];
-        movement = 1;
-        movingRight = true;
-        enemyMoveStart = setInterval(moveEnemyCraft, enemySpeed);
-        enemyShotInterval = setInterval(
-          fireEnemyProjectile,
-          enemyShotFrequency
-        );
-        specialEnemyCraftTimeout = setTimeout(
-          addSpecialEnemyCraft,
-          specialCraftDelay
-        );
-        specialEnemyCraftMovementInterval = setInterval(
-          moveSpecialEnemyCraft,
-          400
-        );
-        results.innerHTML = " ";
-        countdownElement.innerHTML = countDown;
-        countDown -= 1;
-        movement = 1;
-        movingRight = true;
-        currentLevel = 1;
-        livesRemaining = 3;
-        score = 0;
-      }
-    }, 3000);
+    window.location.reload();
+    // if (!mute) {
+    //   restartSound.src = "../audio/restart.wav";
+    //   restartSound.play();
+    // } else if (mute) {
+    //   restartSound.pause();
+    // }
+    // clearInterval(enemyMoveStart);
+    // clearInterval(enemyShotInterval);
+    // clearInterval(specialEnemyCraftMovementInterval);
+    // removeEnemyCraft();
+    // removeSpecialEnemyCraft();
+    // let countDown = 3;
+    // const newCountdown = setInterval(() => {
+    //   if (countDown <= 0) {
+    //     clearInterval(newCountdown);
+    //     enemySpawnArrangementCheck();
+    //     addEnemyCraft();
+    //     fireEnemyProjectile();
+    //     specialEnemyCraftIndex = [22];
+    //     movement = 1;
+    //     movingRight = true;
+    //     enemyMoveStart = setInterval(moveEnemyCraft, enemySpeed);
+    //     enemyShotInterval = setInterval(
+    //       fireEnemyProjectile,
+    //       enemyShotFrequency
+    //     );
+    //     specialEnemyCraftTimeout = setTimeout(
+    //       addSpecialEnemyCraft,
+    //       specialCraftDelay
+    //     );
+    //     specialEnemyCraftMovementInterval = setInterval(
+    //       moveSpecialEnemyCraft,
+    //       400
+    //     );
+    //     results.innerHTML = " ";
+    //     countdownElement.innerHTML = countDown;
+    //     countDown -= 1;
+    //     movement = 1;
+    //     movingRight = true;
+    //     currentLevel = 1;
+    //     livesRemaining = 3;
+    //     score = 0;
+    //   }
+    // }, 3000);
   }
-
-  addEnemyCraft();
-  addUserCraft();
-  addShield();
 
   // const highScores = [];
 
