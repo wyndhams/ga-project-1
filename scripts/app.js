@@ -15,11 +15,12 @@ function init() {
   const hiddenGameOver = document.querySelector("#hidden-game-over");
   const orbOne = document.querySelector(".orb1");
   const orbTwo = document.querySelector(".orb2");
-  const toggleMute = document.querySelector("#toggle-mute");
-  const loadSound = document.querySelector("#load-sound");
+  const muteBtn = document.querySelector("#toggle-mute");
+  const userHitSound = document.querySelector("#user-hit");
   const pads = document.querySelector("#pads");
   const userShootSound = document.querySelector("#user-shoot");
   const enemyShootSound = document.querySelector("#enemy-shoot");
+  const enemyMoveSound = document.querySelector("#enemy-move");
   const startSound = document.querySelector("#start-sound");
   const restartSound = document.querySelector("#restart-sound");
   const levelUpSound = document.querySelector("#level-up-sound");
@@ -40,16 +41,12 @@ function init() {
   let enemyCraftIndex = [];
   let mute = false;
 
-  function backgroundMusic() {
+  window.onload = function () {
     if (!mute) {
-      loadSound.src = "../audio/intro-F#.wav";
-      loadSound.play();
-    } else if (mute) {
-      loadSound.pause();
+      pads.src = "../audio/intro-f-sharp.wav";
+      pads.play();
     }
-  }
-
-  backgroundMusic();
+  };
 
   function enemySpawnArrangementCheck() {
     if (currentLevel === 1 || currentLevel === 5) {
@@ -57,23 +54,47 @@ function init() {
         0, 1, 2, 3, 4, 5, 6, 22, 23, 24, 25, 26, 27, 28, 44, 45, 46, 47, 48, 49,
         50, 66, 67, 68, 69, 70, 71, 72, 88, 89, 90, 91, 92, 93, 94,
       ];
+      if (!mute && currentLevel === 5) {
+        pads.src = "../audio/pad-Dm.wav";
+        pads.play();
+      } else if (mute) {
+        pads.pause();
+      }
     } else if (currentLevel === 2 || currentLevel === 6) {
       enemyCraftIndex = [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 23, 24, 25, 26, 27, 28, 29, 30, 31,
         46, 47, 48, 49, 50, 51, 52, 69, 70, 71, 72, 73, 92, 93, 94, 115,
       ];
+      if (!mute) {
+        pads.src = "../audio/pad-A.wav";
+        pads.play();
+      } else if (mute) {
+        pads.pause();
+      }
     } else if (currentLevel === 3 || currentLevel === 7) {
       enemyCraftIndex = [
         4, 10, 25, 26, 27, 31, 32, 33, 46, 47, 48, 49, 50, 52, 53, 54, 55, 56,
         69, 70, 71, 75, 76, 77, 92, 98, 110, 112, 116, 118, 122, 124, 133, 139,
         145, 154, 156, 160, 162, 166, 168,
       ];
+      if (!mute) {
+        pads.src = "../audio/pad-C.wav";
+        pads.play();
+      } else if (mute) {
+        pads.pause();
+      }
     } else if (currentLevel === 4 || currentLevel >= 8) {
       enemyCraftIndex = [
         0, 2, 4, 6, 8, 10, 23, 25, 27, 29, 31, 44, 46, 48, 50, 52, 54, 67, 69,
         71, 73, 75, 88, 90, 92, 94, 96, 98, 111, 113, 115, 117, 119, 158, 160,
         178, 184, 203, 223, 227, 246, 247, 248,
       ];
+      if (!mute) {
+        pads.src = "../audio/pad-Gm.wav";
+        pads.play();
+      } else if (mute) {
+        pads.pause();
+      }
     }
   }
 
@@ -159,6 +180,10 @@ function init() {
   }
 
   function moveEnemyCraft() {
+    if (!mute) {
+      enemyMoveSound.src = "../audio/shoot-1.wav";
+      enemyMoveSound.play();
+    }
     const leftSide = enemyCraftIndex.some((e) => e % width === 0);
     const rightSide = enemyCraftIndex.some((e) => e % width === width - 1);
     const landing = enemyCraftIndex.some((e) => e >= 374);
@@ -210,6 +235,12 @@ function init() {
 
   function fireUserProjectile() {
     userProjectiles.push(userCraftIndex);
+    if (!mute) {
+      userShootSound.src = "../audio/shoot-2.wav";
+      userShootSound.play();
+    } else if (mute) {
+      userShootSound.pause();
+    }
   }
 
   let userProjectileInterval = setInterval(() => {
@@ -285,6 +316,12 @@ function init() {
         );
         cells[userProjectileIndex].splice(enemyProjectiles);
       } else if (cells[userProjectileIndex].classList.contains("shield")) {
+        if (!mute) {
+          boomSound.src = "../audio/shield-hit.wav";
+          boomSound.play();
+        } else if (mute) {
+          boomSound.pause();
+        }
         cells[userProjectileIndex].classList.remove("shield");
         userProjectiles = userProjectiles.filter(
           (i) => i !== userProjectileIndex
@@ -312,7 +349,23 @@ function init() {
     );
     orbOne.style.animation = "shake 2s infinite";
     orbTwo.style.animation = "shake 2s infinite";
+    if (!mute) {
+      enemyShootSound.src = "../audio/enemy-shoot.wav";
+      enemyShootSound.play();
+    } else if (mute) {
+      enemyShootSound.pause();
+    }
   }
+
+  function userHitPlaySound() {
+    if (!mute) {
+      userHitSound.src = "../audio/user-hit.wav";
+      userHitSound.play();
+    } else if (mute) {
+      userHitSound.pause();
+    }
+  }
+
   let enemyProjectileInterval = setInterval(() => {
     // remove all projectile classes
     enemyProjectiles.forEach((enemyProjectileIndex) => {
@@ -327,6 +380,7 @@ function init() {
     enemyProjectiles.forEach((enemyProjectileIndex) => {
       // if a projectile hits an enemy
       if (cells[enemyProjectileIndex].classList.contains("userCraft")) {
+        userHitPlaySound();
         cells[enemyProjectileIndex].classList.remove("enemy-projectile");
         livesRemaining -= 1;
         lives.innerHTML = livesRemaining;
@@ -341,6 +395,12 @@ function init() {
           endGame();
         }
       } else if (cells[enemyProjectileIndex].classList.contains("shield")) {
+        if (!mute) {
+          boomSound.src = "../audio/shield-hit.wav";
+          boomSound.play();
+        } else if (mute) {
+          boomSound.pause();
+        }
         cells[enemyProjectileIndex].classList.remove("shield");
         enemyProjectiles = enemyProjectiles.filter(
           (i) => i !== enemyProjectileIndex
@@ -363,12 +423,35 @@ function init() {
   let specialEnemyCraftMovementInterval;
   let specialCraftDelay = 40000;
 
+  function toggleMute() {
+    if (mute === false) {
+      mute = true;
+      muteBtn.innerHTML = "Unmute";
+      pads.pause();
+      userShootSound.pause();
+      enemyShootSound.pause();
+      enemyMoveSound.pause();
+      startSound.pause();
+      restartSound.pause();
+      levelUpSound.pause();
+      gameOverSound.pause();
+      boomSound.pause();
+    } else {
+      mute = false;
+      muteBtn.innerHTML = "Mute";
+      pads.play();
+    }
+  }
+
   function startGame() {
     if (!mute) {
+      pads.src = "../audio/pad-Dm.wav";
+      pads.play();
       startSound.src = "../audio/start.wav";
       startSound.play();
     } else if (mute) {
       startSound.pause();
+      pads.pause();
     }
     gameIsRunning = true;
     fireEnemyProjectile();
@@ -385,6 +468,14 @@ function init() {
   // function pauseGame() {}
 
   function levelUp() {
+    if (!mute) {
+      levelUpSound.src = "../audio/level-up.wav";
+      levelUpSound.play();
+    } else if (mute) {
+      levelUpSound.pause();
+    }
+    orbOne.style.animation = "none";
+    orbTwo.style.animation = "none";
     currentLevel++;
     level.innerHTML = currentLevel;
     livesRemaining++;
@@ -431,6 +522,14 @@ function init() {
   }
 
   function endGame() {
+    if (!mute) {
+      gameOverSound.src = "../audio/game-over.wav";
+      gameOverSound.play();
+      boomSound.src = "../audio/boom.wav";
+    } else if (mute) {
+      gameOverSound.pause();
+      boomSound.pause();
+    }
     clearInterval(enemyMoveStart);
     clearInterval(enemyProjectileInterval);
     clearInterval(userProjectileInterval);
@@ -441,6 +540,12 @@ function init() {
   }
 
   function restartGame() {
+    if (!mute) {
+      restartSound.src = "../audio/restart.wav";
+      restartSound.play();
+    } else if (mute) {
+      restartSound.pause();
+    }
     clearInterval(enemyMoveStart);
     clearInterval(enemyShotInterval);
     clearInterval(specialEnemyCraftMovementInterval);
@@ -512,8 +617,9 @@ function init() {
   window.addEventListener("keydown", moveUserCraft);
   window.addEventListener("keydown", handleKeyDown);
   playBtn.addEventListener("click", startGame);
-  // stopBtn.addEventListener("click", endGame);
   restartBtn.addEventListener("click", restartGame);
+  muteBtn.addEventListener("click", toggleMute);
+  // stopBtn.addEventListener("click", endGame);
 }
 
 document.addEventListener("DOMContentLoaded", init);
