@@ -1,10 +1,7 @@
 function init() {
   const grid = document.querySelector(".grid");
   const playBtn = document.querySelector("#play");
-  const stopBtn = document.querySelector(".stop");
   const restartBtn = document.querySelector("#restart");
-  const restartMessage = document.querySelector(".restart-message");
-  const results = document.querySelector(".results");
   const currentScore = document.querySelector("#current-score");
   const lives = document.querySelector("#lives");
   const level = document.querySelector("#level");
@@ -26,7 +23,11 @@ function init() {
   const restartSound = document.querySelector("#restart-sound");
   const levelUpSound = document.querySelector("#level-up-sound");
   const gameOverSound = document.querySelector("#game-over-sound");
+  const gameOverBoom = document.querySelector("#game-over-boom");
   const boomSound = document.querySelector("#boom");
+  // const restartMessage = document.querySelector(".restart-message");
+  // const stopBtn = document.querySelector(".stop");
+  // const results = document.querySelector(".results");
   countdownElement.innerHTML = " ";
   let enemyProjectile;
   let gameIsRunning = false;
@@ -40,6 +41,8 @@ function init() {
   let score = 0;
   let currentLevel = 1;
   let enemyCraftIndex = [];
+  let specialEnemyCraftIndex = [22];
+  let specialEnemyCraftIndexRespawn = [22];
   let mute = false;
 
   window.onload = function () {
@@ -50,7 +53,7 @@ function init() {
   };
 
   function enemySpawnArrangementCheck() {
-    if (currentLevel === 1 || currentLevel === 5) {
+    if (currentLevel === 1 || currentLevel === 5 || currentLevel === 9) {
       enemyCraftIndex = [
         0, 1, 2, 3, 4, 5, 6, 22, 23, 24, 25, 26, 27, 28, 44, 45, 46, 47, 48, 49,
         50, 66, 67, 68, 69, 70, 71, 72, 88, 89, 90, 91, 92, 93, 94,
@@ -58,10 +61,12 @@ function init() {
       if (!mute && currentLevel === 5) {
         pads.src = "./audio/pad-Dm.wav";
         pads.play();
-      } else if (mute) {
-        pads.pause();
       }
-    } else if (currentLevel === 2 || currentLevel === 6) {
+    } else if (
+      currentLevel === 2 ||
+      currentLevel === 6 ||
+      currentLevel === 10
+    ) {
       enemyCraftIndex = [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 23, 24, 25, 26, 27, 28, 29, 30, 31,
         46, 47, 48, 49, 50, 51, 52, 69, 70, 71, 72, 73, 92, 93, 94, 115,
@@ -69,10 +74,12 @@ function init() {
       if (!mute) {
         pads.src = "./audio/pad-A.wav";
         pads.play();
-      } else if (mute) {
-        pads.pause();
       }
-    } else if (currentLevel === 3 || currentLevel === 7) {
+    } else if (
+      currentLevel === 3 ||
+      currentLevel === 7 ||
+      currentLevel === 11
+    ) {
       enemyCraftIndex = [
         4, 10, 25, 26, 27, 31, 32, 33, 46, 47, 48, 49, 50, 52, 53, 54, 55, 56,
         69, 70, 71, 75, 76, 77, 92, 98, 110, 112, 116, 118, 122, 124, 133, 139,
@@ -81,10 +88,12 @@ function init() {
       if (!mute) {
         pads.src = "../audio/pad-C.wav";
         pads.play();
-      } else if (mute) {
-        pads.pause();
       }
-    } else if (currentLevel === 4 || currentLevel === 8) {
+    } else if (
+      currentLevel === 4 ||
+      currentLevel === 8 ||
+      currentLevel === 12
+    ) {
       enemyCraftIndex = [
         0, 2, 4, 6, 8, 10, 23, 25, 27, 29, 31, 44, 46, 48, 50, 52, 54, 67, 69,
         71, 73, 75, 88, 90, 92, 94, 96, 98, 111, 113, 115, 117, 119, 158, 160,
@@ -93,10 +102,8 @@ function init() {
       if (!mute) {
         pads.src = "./audio/pad-Gm.wav";
         pads.play();
-      } else if (mute) {
-        pads.pause();
       }
-    } else if (currentLevel > 8) {
+    } else if (currentLevel > 12) {
       enemyCraftIndex = [
         0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 23, 25, 27, 29, 31, 33, 35, 37,
         39, 41, 43, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 67, 69, 71, 73,
@@ -107,15 +114,12 @@ function init() {
       if (!mute) {
         pads.src = "./audio/pad-d-sharp.wav";
         pads.play();
-      } else if (mute) {
-        pads.pause();
       }
     }
   }
 
   enemySpawnArrangementCheck();
 
-  let specialEnemyCraftIndex = [22];
   let shieldIndex = [
     310, 311, 314, 315, 318, 319, 322, 323, 326, 327, 332, 333, 336, 337, 340,
     341, 344, 345, 348, 349,
@@ -187,7 +191,7 @@ function init() {
   function moveSpecialEnemyCraft() {
     setTimeout(() => {
       if (specialEnemyCraftIndex < 43) {
-        cells[specialEnemyCraftIndex].classList.remove("specialEnemyCraft");
+        removeSpecialEnemyCraft();
         specialEnemyCraftIndex++;
         addSpecialEnemyCraft();
       } else {
@@ -239,7 +243,7 @@ function init() {
 
   let userProjectiles = [];
   // used to minimise the amount a user can shoot
-  let userFireLimit = true;
+  let userCanFire = true;
   let shotAttempt;
   let shotTimer;
   let timePassed;
@@ -254,30 +258,28 @@ function init() {
   function controlUserFire() {
     shotAttempt = new Date().getTime();
     timePassed = shotAttempt - shotTimer;
-    if (timePassed > 400) {
-      userFireLimit = true;
+    if (timePassed > 350) {
+      userCanFire = true;
     }
   }
 
   function fireUserProjectile() {
-    if (!userFireLimit) {
+    controlUserFire();
+    if (!userCanFire) {
       return;
     }
     shotTimer = new Date().getTime();
-    console.log(shotTimer);
     userProjectiles.push(userCraftIndex);
-    userFireLimit = false;
+    userCanFire = false;
     if (!mute) {
       userShootSound.src = "./audio/shoot-2.wav";
       userShootSound.play();
-    } else if (mute) {
-      userShootSound.pause();
     }
   }
 
   let enemyProjectiles = [];
-  let enemySpeed = 1000;
-  let enemyProjectileSpeed = 100;
+  let enemySpeed = 1300;
+  const enemyProjectileSpeed = 100;
   let enemyShotFrequency = 2000;
   let enemyShotFrequencySeconds = enemyShotFrequency / 1000;
 
@@ -290,8 +292,6 @@ function init() {
     if (!mute) {
       enemyShootSound.src = "./audio/enemy-shoot.wav";
       enemyShootSound.play();
-    } else if (mute) {
-      enemyShootSound.pause();
     }
   }
 
@@ -299,8 +299,6 @@ function init() {
     if (!mute) {
       userHitSound.src = "./audio/user-hit.wav";
       userHitSound.play();
-    } else if (mute) {
-      userHitSound.pause();
     }
   }
 
@@ -336,8 +334,6 @@ function init() {
         if (!mute) {
           boomSound.src = "./audio/shield-hit.wav";
           boomSound.play();
-        } else if (mute) {
-          boomSound.pause();
         }
         cells[enemyProjectileIndex].classList.remove("shield");
         enemyProjectiles = enemyProjectiles.filter(
@@ -381,20 +377,12 @@ function init() {
         );
         score += 100;
         currentScore.innerHTML = score;
-      } else if (
-        cells[userProjectileIndex].classList.contains("specialEnemyCraft")
-      ) {
+      } else if (cells[userProjectileIndex].classList.contains("specialEnemyCraft")) {
+        userProjectiles = userProjectiles.filter(
+          (i) => i !== userProjectileIndex
+        );
         cells[userProjectileIndex].classList.remove("projectile");
-        userProjectiles = userProjectiles.filter(
-          (i) => i !== userProjectileIndex
-        );
-        cells[userProjectileIndex].classList.remove(
-          "projectile",
-          "specialEnemyCraft"
-        );
-        userProjectiles = userProjectiles.filter(
-          (i) => i !== userProjectileIndex
-        );
+        // console.log(specialEnemyCraftIndex);
         cells[userProjectileIndex].classList.add("explosion");
         setTimeout(
           () => cells[userProjectileIndex].classList.remove("explosion"),
@@ -429,8 +417,6 @@ function init() {
         if (!mute) {
           boomSound.src = "./audio/shield-hit.wav";
           boomSound.play();
-        } else if (mute) {
-          boomSound.pause();
         }
         cells[userProjectileIndex].classList.remove("shield");
         userProjectiles = userProjectiles.filter(
@@ -452,8 +438,14 @@ function init() {
   let enemyShotInterval;
   let specialEnemyCraftTimeout;
   let specialEnemyCraftMovementInterval;
-  let specialCraftDelay = 40000;
+  let specialCraftDelay = 50000;
 
+  function checkForAdditionalLives() {
+    if (currentLevel % 3 === 0) {
+      livesRemaining++;
+      lives.innerHTML = livesRemaining;
+    }
+  }
   function toggleMute() {
     if (mute === false) {
       mute = true;
@@ -480,9 +472,6 @@ function init() {
       pads.play();
       startSound.src = "./audio/start.wav";
       startSound.play();
-    } else if (mute) {
-      startSound.pause();
-      pads.pause();
     }
     addShield();
     addUserCraft();
@@ -506,15 +495,12 @@ function init() {
     if (!mute) {
       levelUpSound.src = "./audio/level-up.wav";
       levelUpSound.play();
-    } else if (mute) {
-      levelUpSound.pause();
     }
     orbOne.style.animation = "none";
     orbTwo.style.animation = "none";
     currentLevel++;
     level.innerHTML = currentLevel;
-    livesRemaining++;
-    lives.innerHTML = livesRemaining;
+    checkForAdditionalLives();
     clearInterval(enemyMoveStart);
     clearInterval(enemyShotInterval);
     // clearInterval(specialEnemyCraftMovementInterval);
@@ -529,7 +515,6 @@ function init() {
         clearInterval(newCountdown);
         enemySpawnArrangementCheck();
         addEnemyCraft();
-        setTimeout(addSpecialEnemyCraft, specialCraftDelay);
         fireEnemyProjectile();
         specialEnemyCraftIndex = [22];
         enemySpeed = enemySpeed - 100;
@@ -542,27 +527,25 @@ function init() {
           fireEnemyProjectile,
           enemyShotFrequency
         );
-        // specialEnemyCraftMovementInterval = setInterval(
-        //   moveSpecialEnemyCraft,
-        //   400
-        // );
         countdownElement.innerHTML = " ";
         hiddenLevelUp.style.display = "none";
       }
       countdownElement.innerHTML = countDown;
       countDown -= 1;
     }, 1000);
+    specialEnemyCraftTimeout = setTimeout(
+      addSpecialEnemyCraft,
+      specialCraftDelay
+    );
+    specialEnemyCraftMovementInterval = setInterval(moveSpecialEnemyCraft, 400);
   }
 
   function endGame() {
     if (!mute) {
       gameOverSound.src = "./audio/game-over.wav";
       gameOverSound.play();
-      boomSound.src = "./audio/boom.wav";
-      boomSound.play();
-    } else if (mute) {
-      gameOverSound.pause();
-      boomSound.pause();
+      gameOverBoom.src = "./audio/boom.wav";
+      gameOverBoom.play();
     }
     clearInterval(enemyMoveStart);
     clearInterval(projectileInterval);
