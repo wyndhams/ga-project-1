@@ -41,7 +41,6 @@ function init() {
   let currentLevel = 1;
   let enemyCraftIndex = [];
   let mute = false;
-  let travelDistance = 3;
 
   window.onload = function () {
     if (!mute) {
@@ -85,7 +84,7 @@ function init() {
       } else if (mute) {
         pads.pause();
       }
-    } else if (currentLevel === 4 || currentLevel >= 8) {
+    } else if (currentLevel === 4 || currentLevel === 8) {
       enemyCraftIndex = [
         0, 2, 4, 6, 8, 10, 23, 25, 27, 29, 31, 44, 46, 48, 50, 52, 54, 67, 69,
         71, 73, 75, 88, 90, 92, 94, 96, 98, 111, 113, 115, 117, 119, 158, 160,
@@ -93,6 +92,20 @@ function init() {
       ];
       if (!mute) {
         pads.src = "./audio/pad-Gm.wav";
+        pads.play();
+      } else if (mute) {
+        pads.pause();
+      }
+    } else if (currentLevel > 8) {
+      enemyCraftIndex = [
+        0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 23, 25, 27, 29, 31, 33, 35, 37,
+        39, 41, 43, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 67, 69, 71, 73,
+        75, 77, 79, 81, 83, 85, 87, 158, 160, 169, 171, 178, 189, 184, 195, 203,
+        214, 223, 227, 234, 238, 245, 246, 247, 248, 249, 256, 257, 258, 259,
+        260,
+      ];
+      if (!mute) {
+        pads.src = "./audio/pad-d-sharp.wav";
         pads.play();
       } else if (mute) {
         pads.pause();
@@ -226,7 +239,10 @@ function init() {
 
   let userProjectiles = [];
   // used to minimise the amount a user can shoot
-  let userFireRate;
+  let userFireLimit = true;
+  let shotAttempt;
+  let shotTimer;
+  let timePassed;
 
   function handleKeyDown(event) {
     if (event.keyCode === 90) {
@@ -235,10 +251,22 @@ function init() {
     }
   }
 
-  function controlUserFire() {}
+  function controlUserFire() {
+    shotAttempt = new Date().getTime();
+    timePassed = shotAttempt - shotTimer;
+    if (timePassed > 400) {
+      userFireLimit = true;
+    }
+  }
 
   function fireUserProjectile() {
+    if (!userFireLimit) {
+      return;
+    }
+    shotTimer = new Date().getTime();
+    console.log(shotTimer);
     userProjectiles.push(userCraftIndex);
+    userFireLimit = false;
     if (!mute) {
       userShootSound.src = "./audio/shoot-2.wav";
       userShootSound.play();
@@ -396,7 +424,7 @@ function init() {
           () => cells[userProjectileIndex].classList.remove("explosion"),
           200
         );
-        cells[userProjectileIndex].splice(enemyProjectiles);
+        // userProjectileIndex.splice(enemyProjectiles);
       } else if (cells[userProjectileIndex].classList.contains("shield")) {
         if (!mute) {
           boomSound.src = "./audio/shield-hit.wav";
@@ -456,12 +484,13 @@ function init() {
       startSound.pause();
       pads.pause();
     }
-    addEnemyCraft();
-    addUserCraft();
     addShield();
+    addUserCraft();
+    addEnemyCraft();
     gameIsRunning = true;
     fireEnemyProjectile();
     hiddenIntro.style.display = "none";
+    playBtn.remove();
     specialEnemyCraftTimeout = setTimeout(
       addSpecialEnemyCraft,
       specialCraftDelay
@@ -488,7 +517,7 @@ function init() {
     lives.innerHTML = livesRemaining;
     clearInterval(enemyMoveStart);
     clearInterval(enemyShotInterval);
-    clearInterval(specialEnemyCraftMovementInterval);
+    // clearInterval(specialEnemyCraftMovementInterval);
     removeEnemyCraft();
     removeSpecialEnemyCraft();
     shieldRespawnCheck();
@@ -500,12 +529,12 @@ function init() {
         clearInterval(newCountdown);
         enemySpawnArrangementCheck();
         addEnemyCraft();
+        setTimeout(addSpecialEnemyCraft, specialCraftDelay);
         fireEnemyProjectile();
         specialEnemyCraftIndex = [22];
-        enemySpeed = enemySpeed - 80;
+        enemySpeed = enemySpeed - 100;
         enemyShotFrequency = enemyShotFrequency - 100;
         enemyShotFrequencySeconds = enemyShotFrequency / 1000;
-        // enemyProjectileSpeed = enemyProjectileSpeed - 2;
         movement = 1;
         movingRight = true;
         enemyMoveStart = setInterval(moveEnemyCraft, enemySpeed);
@@ -513,14 +542,10 @@ function init() {
           fireEnemyProjectile,
           enemyShotFrequency
         );
-        specialEnemyCraftTimeout = setTimeout(
-          addSpecialEnemyCraft,
-          specialCraftDelay
-        );
-        specialEnemyCraftMovementInterval = setInterval(
-          moveSpecialEnemyCraft,
-          400
-        );
+        // specialEnemyCraftMovementInterval = setInterval(
+        //   moveSpecialEnemyCraft,
+        //   400
+        // );
         countdownElement.innerHTML = " ";
         hiddenLevelUp.style.display = "none";
       }
@@ -534,6 +559,7 @@ function init() {
       gameOverSound.src = "./audio/game-over.wav";
       gameOverSound.play();
       boomSound.src = "./audio/boom.wav";
+      boomSound.play();
     } else if (mute) {
       gameOverSound.pause();
       boomSound.pause();
@@ -548,57 +574,13 @@ function init() {
 
   function restartGame() {
     window.location.reload();
-    // if (!mute) {
-    //   restartSound.src = "../audio/restart.wav";
-    //   restartSound.play();
-    // } else if (mute) {
-    //   restartSound.pause();
-    // }
-    // clearInterval(enemyMoveStart);
-    // clearInterval(enemyShotInterval);
-    // clearInterval(specialEnemyCraftMovementInterval);
-    // removeEnemyCraft();
-    // removeSpecialEnemyCraft();
-    // let countDown = 3;
-    // const newCountdown = setInterval(() => {
-    //   if (countDown <= 0) {
-    //     clearInterval(newCountdown);
-    //     enemySpawnArrangementCheck();
-    //     addEnemyCraft();
-    //     fireEnemyProjectile();
-    //     specialEnemyCraftIndex = [22];
-    //     movement = 1;
-    //     movingRight = true;
-    //     enemyMoveStart = setInterval(moveEnemyCraft, enemySpeed);
-    //     enemyShotInterval = setInterval(
-    //       fireEnemyProjectile,
-    //       enemyShotFrequency
-    //     );
-    //     specialEnemyCraftTimeout = setTimeout(
-    //       addSpecialEnemyCraft,
-    //       specialCraftDelay
-    //     );
-    //     specialEnemyCraftMovementInterval = setInterval(
-    //       moveSpecialEnemyCraft,
-    //       400
-    //     );
-    //     results.innerHTML = " ";
-    //     countdownElement.innerHTML = countDown;
-    //     countDown -= 1;
-    //     movement = 1;
-    //     movingRight = true;
-    //     currentLevel = 1;
-    //     livesRemaining = 3;
-    //     score = 0;
-    //   }
-    // }, 3000);
   }
 
   // const highScores = [];
 
   // function storeHighScores() {
   //   const playerName = prompt(
-  //     "They always get you in the end... Please input your name."
+  //     "Nice job, please input your name."
   //   );
   //   const newScore = { score, playerName };
   //   const scores = localStorage.getItem("highscores");
