@@ -132,13 +132,6 @@ function init() {
     }
   }
 
-  function checkForAdditionalLives() {
-    if (currentLevel % 3 === 0) {
-      livesRemaining++;
-      lives.innerHTML = livesRemaining;
-    }
-  }
-
   function createGrid() {
     for (let i = 0; i < gridCellCount; i++) {
       const cell = document.createElement("div");
@@ -199,7 +192,7 @@ function init() {
   function moveSpecialEnemyCraft() {
     setTimeout(() => {
       if (specialEnemyCraftIndex < 43) {
-        cells[specialEnemyCraftIndex].classList.remove("specialEnemyCraft");
+        removeSpecialEnemyCraft();
         specialEnemyCraftIndex++;
         addSpecialEnemyCraft();
       } else {
@@ -303,7 +296,7 @@ function init() {
     }
   }
 
-  function userHitPlaySound() {
+  function userHitSoundFn() {
     if (!mute) {
       userHitSound.src = "./audio/user-hit.wav";
       userHitSound.play();
@@ -331,7 +324,7 @@ function init() {
     enemyProjectiles.forEach((enemyProjectileIndex) => {
       // if a projectile hits an enemy
       if (cells[enemyProjectileIndex].classList.contains("userCraft")) {
-        userHitPlaySound();
+        userHitSoundFn();
         cells[enemyProjectileIndex].classList.remove("enemy-projectile");
         livesRemaining -= 1;
         lives.innerHTML = livesRemaining;
@@ -396,18 +389,11 @@ function init() {
         cells[userProjectileIndex].classList.contains("specialEnemyCraft")
       ) {
         specialHitSoundFn();
-        cells[userProjectileIndex].classList.remove("projectile");
         userProjectiles = userProjectiles.filter(
           (i) => i !== userProjectileIndex
         );
         cells[userProjectileIndex].classList.remove("projectile");
-        userProjectiles = userProjectiles.filter(
-          (i) => i !== userProjectileIndex
-        );
         // console.log(specialEnemyCraftIndex);
-        // const specialPositionInArray =
-        //   SpecialEnemyCraftIndex.indexOf(userProjectileIndex);
-        // specialEnemyCraftIndex.splice(specialPositionInArray, 1);
         cells[userProjectileIndex].classList.add("explosion");
         setTimeout(
           () => cells[userProjectileIndex].classList.remove("explosion"),
@@ -463,8 +449,14 @@ function init() {
   let enemyShotInterval;
   let specialEnemyCraftTimeout;
   let specialEnemyCraftMovementInterval;
-  let specialCraftDelay = 10000;
+  let specialCraftDelay = 50000;
 
+  function checkForAdditionalLives() {
+    if (currentLevel % 3 === 0) {
+      livesRemaining++;
+      lives.innerHTML = livesRemaining;
+    }
+  }
   function toggleMute() {
     if (mute === false) {
       mute = true;
@@ -503,7 +495,10 @@ function init() {
       addSpecialEnemyCraft,
       specialCraftDelay
     );
-    specialEnemyCraftMovementInterval = setInterval(moveSpecialEnemyCraft, 400);
+    specialEnemyCraftMovementInterval = setInterval(
+      moveSpecialEnemyCraft,
+      1000
+    );
     enemyMoveStart = setInterval(moveEnemyCraft, enemySpeed);
     enemyShotInterval = setInterval(fireEnemyProjectile, enemyShotFrequency);
   }
@@ -519,15 +514,13 @@ function init() {
     orbTwo.style.animation = "none";
     currentLevel++;
     level.innerHTML = currentLevel;
-    livesRemaining++;
-    lives.innerHTML = livesRemaining;
+    checkForAdditionalLives();
     clearInterval(enemyMoveStart);
     clearInterval(enemyShotInterval);
     // clearInterval(specialEnemyCraftMovementInterval);
     removeEnemyCraft();
     removeSpecialEnemyCraft();
     shieldRespawnCheck();
-    checkForAdditionalLives();
     hiddenLevelUp.style.display = "block";
     currentLevelElement.innerHTML = currentLevel;
     let countDown = 3;
@@ -536,9 +529,8 @@ function init() {
         clearInterval(newCountdown);
         enemySpawnArrangementCheck();
         addEnemyCraft();
-        setTimeout(addSpecialEnemyCraft, specialCraftDelay);
         fireEnemyProjectile();
-        specialEnemyCraftIndex = [22];
+        // specialEnemyCraftIndex = [22];
         enemySpeed = enemySpeed - 100;
         enemyShotFrequency = enemyShotFrequency - 100;
         enemyShotFrequencySeconds = enemyShotFrequency / 1000;
@@ -549,16 +541,17 @@ function init() {
           fireEnemyProjectile,
           enemyShotFrequency
         );
-        // specialEnemyCraftMovementInterval = setInterval(
-        //   moveSpecialEnemyCraft,
-        //   400
-        // );
         countdownElement.innerHTML = " ";
         hiddenLevelUp.style.display = "none";
       }
       countdownElement.innerHTML = countDown;
       countDown -= 1;
     }, 1000);
+    specialEnemyCraftTimeout = setTimeout(
+      addSpecialEnemyCraft,
+      specialCraftDelay
+    );
+    specialEnemyCraftMovementInterval = setInterval(moveSpecialEnemyCraft, 400);
   }
 
   function endGame() {
