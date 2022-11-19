@@ -504,6 +504,13 @@ function init() {
   // function pauseGame() {}
 
   function levelUp() {
+    clearInterval(enemyShotInterval);
+    clearInterval(enemyMoveStart);
+    // clearInterval(specialEnemyCraftMovementInterval);
+    removeEnemyCraft();
+    removeSpecialEnemyCraft();
+    checkForAdditionalLives();
+    shieldRespawnCheck();
     if (!mute) {
       levelUpSound.src = "./audio/level-up.wav";
       levelUpSound.play();
@@ -512,13 +519,6 @@ function init() {
     orbTwo.style.animation = "none";
     currentLevel++;
     level.innerHTML = currentLevel;
-    checkForAdditionalLives();
-    clearInterval(enemyMoveStart);
-    clearInterval(enemyShotInterval);
-    // clearInterval(specialEnemyCraftMovementInterval);
-    removeEnemyCraft();
-    removeSpecialEnemyCraft();
-    shieldRespawnCheck();
     hiddenLevelUp.style.display = "block";
     currentLevelElement.innerHTML = currentLevel;
     let countDown = 3;
