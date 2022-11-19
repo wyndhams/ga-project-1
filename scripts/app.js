@@ -285,11 +285,15 @@ function init() {
   let enemyShotFrequencySeconds = enemyShotFrequency / 1000;
 
   function fireEnemyProjectile() {
-    enemyProjectiles.push(
-      enemyCraftIndex[Math.floor(Math.random() * enemyCraftIndex.length)]
-    );
-    orbOne.style.animation = `shake ${enemyShotFrequencySeconds}s infinite`;
-    orbTwo.style.animation = `shake ${enemyShotFrequencySeconds}s infinite`;
+    if (!enemyCraftIndex.length) {
+      return;
+    } else {
+      enemyProjectiles.push(
+        enemyCraftIndex[Math.floor(Math.random() * enemyCraftIndex.length)]
+      );
+      orbOne.style.animation = `shake ${enemyShotFrequencySeconds}s infinite`;
+      orbTwo.style.animation = `shake ${enemyShotFrequencySeconds}s infinite`;
+    }
     if (!mute) {
       enemyShootSound.src = "./audio/enemy-shoot.wav";
       enemyShootSound.play();
@@ -506,7 +510,7 @@ function init() {
   function levelUp() {
     clearInterval(enemyShotInterval);
     clearInterval(enemyMoveStart);
-    // clearInterval(specialEnemyCraftMovementInterval);
+    clearInterval(specialEnemyCraftMovementInterval);
     removeEnemyCraft();
     removeSpecialEnemyCraft();
     checkForAdditionalLives();
