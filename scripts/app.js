@@ -269,6 +269,7 @@ function init() {
     if (!userCanFire) {
       return;
     }
+    // cells[userCraftIndex].style.animation = "userShotRecoil 0.1s infinite";
     shotTimer = new Date().getTime();
     userProjectiles.push(userCraftIndex);
     userCanFire = false;
