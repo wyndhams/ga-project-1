@@ -48,6 +48,8 @@ npm start
 # Planning
 The planning phase involved determining the game's essential features, including the game's mechanics, graphics, and audio. The planning phase also included developing a roadmap and timeline to guide the project's development. I also researched different implementations of Space Invaders and played various versions of the game to better understand its core mechanics and to get inspiration for my implementation. I also made sketches of the game's user interface and created a list of required assets, such as images and audio files.
 
+<img src="./README_images/project-1-wireframe.png">
+
 # Build Process
 The build process involved developing the game's mechanics using JavaScript, including the player's and alien spaceship movement, shooting and explosions. Additionally, the graphics were created using HTML and CSS. To create the audio for the game, I used a combination of sound effects from Splice.
 
