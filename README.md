@@ -375,3 +375,4 @@ If I had more time I would like to include some additional features to the game 
 # Bugs
 - The interval on the special enemy craft needs refining. This works correctly on Level 1, i.e. the craft appears after 'x' seconds. However each of the proceeding levels the craft appears straight away. 
 - The user can still shoot when in the lobby waiting between levels.
+- The restart function works by reloading the page rather than resetting all of the intervals, score etc. 
