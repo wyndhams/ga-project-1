@@ -365,7 +365,7 @@ In addition to the highlights I previously mentioned, another significant highli
 Another highlight was the development process itself. Working on the project allowed me to deepen my understanding of core programming concepts such as object-oriented programming, game mechanics, and algorithm optimisation. I also gained experience with project management and design, as well as working with external libraries and APIs.
 
 # Future Development
-Future development for the project could include adding additional features which could include:
+If I had more time I would like to include some additional features to the game and also improve certain aspects of it. I have included a list below of such changes:
 - Optimisation to improve performance on a wider range of devices, including making the game mobile friendly with additional responsive design.
 - Adding power-ups: Power-ups such as shields, extra lives, and weapon upgrades could be introduced to add variety and strategic depth to the game.
 - Adding boss battles: Boss battles could be included as a climactic finale to each level, requiring the player to use different tactics and skills to defeat a tougher opponent.
