@@ -186,7 +186,25 @@ function fireEnemyProjectile() {
   }}
 ```
 
-I then introduced shields and collisions to the game. If the user was hit by an enemy projectile, I wanted a life to be deducted, starting at 3, and if the value of lives got to 0 the game would end. If the user hit an enemy projectile I wanted that enemy to be removed from the array of enemy crafts. Similarly if a shield were hit I wanted this to be removed from the shield array. I achieved this using the following logic.
+I then introduced shields and collisions to the game. If the user was hit by an enemy projectile, I wanted a life to be deducted. The user started with 3 lives and if the value of lives got to 0 the end game function would be triggered which would bring up a game over screen. 
+
+```js
+function endGame() {
+    if (!mute) {
+      gameOverSound.src = "./audio/game-over.wav";
+      gameOverSound.play();
+      gameOverBoom.src = "./audio/boom.wav";
+      gameOverBoom.play();
+    }
+    clearInterval(enemyMoveStart);
+    clearInterval(projectileInterval);
+    clearInterval(specialEnemyCraftMovementInterval);
+    hiddenGameOver.style.display = "block";
+    return (gameIsRunning = false);
+  }
+```
+
+If the user hit an enemy projectile I wanted that enemy to be removed from the array of enemy crafts. Similarly if a shield were hit I wanted this to be removed from the shield array. I achieved this using the following logic.
 
 ```js
 enemyProjectiles.forEach((enemyProjectileIndex) => {
