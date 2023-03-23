@@ -1,5 +1,5 @@
 # Project Overview
-The project is a browser-based version of the classic arcade game Space Invaders, created using vanilla HTML, CSS, and JavaScript. The game involves a player controlling a spaceship at the bottom of the screen and shooting down waves of alien invaders who move progressively closer to the player's position. As the player progresses through levels of the game the invaders move and shoot faster.
+The project is a browser-based version of the classic arcade game Space Invaders, created using vanilla HTML, CSS, and JavaScript. The game involves a player controlling a spaceship at the bottom of the screen and shooting down waves of alien invaders who move progressively closer to the player's position. As the player moves through levels of the game the invaders move and shoot faster.
 
 Please find the full deployment of the app [here](https://wyndhams.github.io/ga-project-1/). 
 
