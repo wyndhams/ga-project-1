@@ -186,7 +186,7 @@ function fireEnemyProjectile() {
   }}
 ```
 
-I then introduced shields and collisions to the game. If the user was hit by an enemy projectile, I wanted a life to be deducted. The user started with 3 lives and if the value of lives got to 0 the end game function would be triggered which would bring up a game over screen. 
+I then introduced shields in front of the user craft and collisions to the game. If the user was hit by an enemy projectile, I wanted a life to be deducted. The user started with 3 lives and if the value of lives got to 0 the end game function would be triggered which would bring up a game over screen. 
 
 ```js
 function endGame() {
@@ -208,7 +208,6 @@ If the user hit an enemy projectile I wanted that enemy to be removed from the a
 
 ```js
 enemyProjectiles.forEach((enemyProjectileIndex) => {
-      // if a projectile hits an enemy
       if (cells[enemyProjectileIndex].classList.contains("userCraft")) {
         userHitPlaySound();
         cells[enemyProjectileIndex].classList.remove("enemy-projectile");
@@ -254,6 +253,7 @@ function levelUp() {
   enemyShotFrequency = enemyShotFrequency - 100;
   enemySpawnArrangementCheck();
 }
+
 function enemySpawnArrangementCheck() {
     if (currentLevel === 1 || currentLevel === 5 || currentLevel === 9) {
       enemyCraftIndex = [
@@ -278,7 +278,7 @@ function enemySpawnArrangementCheck() {
 }
 ```
 
-The game also keeps track of the users score which increases by a factor of 100 when the user destroys an enemy craft and 1000 when the user hits the special enemy craft that appears once per turn. I will discuss this further in the Challenges section as I ran out of time to implement the enemy craft functionality correctly so it is a little bit buggy in the current version of the game. 
+The game also keeps track of the users score which increases by 100 points when the user destroys an enemy craft and 1000 points when the user hits the special enemy craft that appears once per level. I will discuss this further in the Challenges and Bugs sections as I ran out of time to implement the enemy craft functionality correctly so it is a little bit buggy in the current version of the game. 
 
 ## Styling
 
@@ -295,7 +295,7 @@ This was one of the aspect of the game development that I enjoyed the most. I wa
 }
 ```
 
-I also wanted to give the effect that the user was playing on a screen within a screen so I opted to house the game grid on a ‘tv’ in which the screen flashed up at the beginning of the game, at the end of levels and at the end of the game. 
+I also wanted to give the effect that the user was playing on a screen within their laptop / pc screen so I opted to house the game grid on a ‘tv’ in which information was displayed at the beginning of the game, at the end of levels and when the game was over due to the player losing all of their lives or the enemy craft landing. 
 
 ```css
 .game-over-overlay {
@@ -365,7 +365,7 @@ I was also proud of the two orbs which appear either side of the ‘tv’ screen
 ```
 
 # Challenges
-One of the primary challenges of the project was achieving smooth and responsive movement for the player's spaceship and the alien invaders, while also maintaining consistent gameplay performance. Achieving this required careful optimisation of the game's animation and physics calculations, as well as utilising various techniques such as object pooling to reduce the number of expensive object creations and deletions.
+One of the primary challenges of the project was achieving smooth and responsive movement for the player's spaceship and the alien invaders, while also maintaining consistent gameplay performance. Achieving this required careful optimisation of the code. This could still be smoother and is something I would like to improve through further development.
 
 Another challenge was making the game compatible with a wide range of browsers and devices. Since the game was developed using vanilla HTML, CSS, and JavaScript, it was important to ensure that it could run on as many platforms as possible. This required thorough testing and debugging across different browsers, including legacy browsers that may not support the latest web standards. It also required designing the game to be responsive and scalable across different screen sizes and resolutions.
 
@@ -374,11 +374,9 @@ A further challenge was creating the game's audio, as it required knowledge of d
 Finally, creating the high-score tracking system required understanding of how to save and retrieve data from the browser's local storage, as well as designing a simple and intuitive user interface to display the player's score and progress.
 
 # Highlights & Key Takeaways
-The highlights of the project include the successful implementation of the game's mechanics, graphics, and audio, resulting in a fully functional Space Invaders game. The game also includes a high-score tracking system and different difficulty levels.
+The highlights of the project include the successful implementation of the game's mechanics, graphics, and audio, resulting in a fully functional Space Invaders game. I was also proud of the implementation of the different difficulty levels in the game.
 
-One of the highlights of the project was creating the game's high-score tracking system, which involved saving and retrieving scores from the browser's local storage. I also implemented different difficulty levels, which adjusted the speed and behavior of the alien invaders to increase the game's challenge.
-
-In addition to the highlights I previously mentioned, another significant highlight of the project was creating a responsive and intuitive user interface. The game's interface includes a start screen with instructions, a game screen with the player's score and remaining lives, and an end screen with the player's final score and an option to restart the game.
+Another significant highlight of the project was creating a responsive and intuitive user interface. The game's interface includes a start screen with instructions, a game screen with the player's score and remaining lives, and an end screen with the player's final score and an option to restart the game.
 
 Another highlight was the development process itself. Working on the project allowed me to deepen my understanding of core programming concepts such as object-oriented programming, game mechanics, and algorithm optimisation. I also gained experience with project management and design, as well as working with external libraries and APIs.
 
@@ -388,7 +386,7 @@ If I had more time I would like to include some additional features to the game 
 - Adding power-ups: Power-ups such as shields, extra lives, and weapon upgrades could be introduced to add variety and strategic depth to the game.
 - Adding boss battles: Boss battles could be included as a climactic finale to each level, requiring the player to use different tactics and skills to defeat a tougher opponent.
 - Expanding the game world: The game could be expanded to include more levels, enemy types, and environments, such as different planets or space stations.
-- Improving graphics and audio: The game's graphics and audio could be improved to enhance the game's atmosphere and to make it more visually appealing and immersive. This could involve creating more detailed and animated sprites, and adding more varied and dynamic music and sound effects.
+- Improving graphics and audio: The game's graphics and audio could be improved to enhance the game's atmosphere and to make it more visually appealing and immersive. This could involve creating more detailed and animated characters, and adding more varied and dynamic music and sound effects.
 
 # Bugs
 - The interval on the special enemy craft needs refining. This works correctly on Level 1, i.e. the craft appears after 'x' seconds. However each of the proceeding levels the craft appears straight away. 
